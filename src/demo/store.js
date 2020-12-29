@@ -5,48 +5,79 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    scores: [
-      { name: '进攻', max: 20, value: 19 },
-      { name: '防守', max: 20, value: 9 },
-      { name: '速度', max: 20, value: 18 },
-      { name: '力量', max: 20, value: 16 },
-      { name: '耐力', max: 20, value: 16 },
-      { name: '敏捷', max: 20, value: 20 }
-    ]
+    data: [{
+      name: '廊坊',
+      value: 193
+    },
+    {
+      name: '菏泽',
+      value: 194
+    },
+    {
+      name: '合肥',
+      value: 229
+    },
+    {
+      name: '武汉',
+      value: 273
+    },
+    {
+      name: '大庆',
+      value: 279
+    },
+    {
+      name: '东京',
+      value: 319
+    },
+    {
+      name: '上海',
+      value: 355
+    },
+    {
+      name: '台北',
+      value: 279
+    }
+    ],
+    geoCoordMap: {
+      廊坊: [116.7, 39.53],
+      菏泽: [115.480656, 35.23375],
+      合肥: [117.27, 31.86],
+      武汉: [114.31, 30.52],
+      大庆: [125.03, 46.58],
+      东京: [139.46, 35.42],
+      上海: [121.43, 31.18],
+      台北: [121.50, 25.05]
+    }
   },
   getters: {
-    scoreRadar ({ scores }) {
-      return {
-        title: {
-          text: '能力雷达图'
-        },
-        tooltip: {},
-        radar: {
-          indicator: scores.map(({ name, max }) => {
-            return { name, max }
-          })
-        },
-        series: [
-          {
-            name: '能力值',
-            type: 'radar',
-            data: [{ value: scores.map(({ value }) => value) }]
-          }
-        ]
-      }
+    getData (state) {
+      return state.data
+    },
+    getGeoCoordMap (state) {
+      return state.geoCoordMap
     }
   },
   mutations: {
-    increment ({ scores }, { amount = 1, index = 0 }) {
-      const metric = scores[index]
-      metric.value = Math.max(Math.min(metric.value + amount, metric.max), 0)
+    add100 (state, cityName) {
+      var cityIndex = state.data.findIndex(ele => {
+        return ele.name === cityName
+      })
+      state.data[cityIndex].value += 100
+    },
+    minus100 (state, cityName) {
+      var cityIndex = state.data.findIndex(ele => {
+        return ele.name === cityName
+      })
+      state.data[cityIndex].value -= 100
     }
   },
   actions: {
-    asyncIncrement ({ commit }, { amount = 1, index, delay }) {
-      setTimeout(() => {
-        commit('increment', { amount, index })
-      }, delay)
+    add100Action (context, cityName) {
+      context.commit('add100', cityName)
+    },
+    minus100Action (context, cityName) {
+      context.commit('minus100', cityName)
     }
+
   }
 })

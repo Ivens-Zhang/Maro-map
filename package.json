@@ -14,8 +14,10 @@
   "module": "components/ECharts.vue",
   "dependencies": {
     "core-js": "^3.4.4",
+    "echarts": "^4.9.0",
     "lodash": "^4.17.15",
-    "resize-detector": "^0.1.10"
+    "resize-detector": "^0.1.10",
+    "vue-echarts": "^5.0.0-beta.0"
   },
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.0",

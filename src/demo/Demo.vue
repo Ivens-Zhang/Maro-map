@@ -1,114 +1,6 @@
 <template>
   <main>
-    <chart id="logo" :options="logo" :init-options="initOptions" autoresize />
-    <h1><a href="https://github.com/Justineo/vue-echarts">Vue-ECharts</a></h1>
-    <p class="desc">ECharts component for Vue.js.</p>
-
-    <h2 id="bar">
-      <a href="#bar"
-        >Bar chart <small>(with async data &amp; custom theme)</small></a
-      >
-      <button
-        :class="{
-          round: true,
-          expand: expand.bar
-        }"
-        @click="expand.bar = !expand.bar"
-        aria-label="toggle"
-      ></button>
-    </h2>
-    <section v-if="expand.bar">
-      <figure>
-        <chart
-          :options="bar"
-          :init-options="initOptions"
-          ref="bar"
-          theme="ovilia-green"
-          autoresize
-          @zr:click="handleZrClick"
-          @click="handleClick"
-        />
-      </figure>
-      <p v-if="seconds <= 0"><small>Loaded.</small></p>
-      <p v-else>
-        <small
-          >Data coming in <b>{{ seconds }}</b> second{{
-            seconds > 1 ? 's' : ''
-          }}...</small
-        >
-      </p>
-      <p><button @click="refresh" :disabled="seconds > 0">Refresh</button></p>
-    </section>
-
-    <h2 id="pie">
-      <a href="#pie">Pie chart <small>(with action dispatch)</small></a>
-      <button
-        :class="{
-          round: true,
-          expand: expand.pie
-        }"
-        @click="expand.pie = !expand.pie"
-        aria-label="toggle"
-      ></button>
-    </h2>
-    <section v-if="expand.pie">
-      <figure>
-        <chart
-          :options="pie"
-          :init-options="initOptions"
-          ref="pie"
-          autoresize
-        />
-      </figure>
-    </section>
-
-    <h2 id="polar">
-      <a href="#polar">Polar plot <small>(with built-in theme)</small></a>
-      <button
-        :class="{
-          round: true,
-          expand: expand.polar
-        }"
-        @click="expand.polar = !expand.polar"
-        aria-label="toggle"
-      ></button>
-    </h2>
-    <section v-if="expand.polar">
-      <figure :style="polarTheme === 'dark' ? 'background-color: #333' : ''">
-        <chart
-          :options="polar"
-          :init-options="initOptions"
-          :theme="polarTheme"
-          autoresize
-        />
-      </figure>
-      <p>
-        Theme
-        <select v-model="polarTheme">
-          <option :value="null">Default</option>
-          <option value="dark">Dark</option>
-        </select>
-      </p>
-    </section>
-
-    <h2 id="scatter">
-      <a href="#scatter">Scatter plot <small>(with gradient)</small></a>
-      <button
-        :class="{
-          round: true,
-          expand: expand.scatter
-        }"
-        @click="expand.scatter = !expand.scatter"
-        aria-label="toggle"
-      ></button>
-    </h2>
-    <section v-if="expand.scatter">
-      <figure>
-        <chart :options="scatter" :init-options="initOptions" autoresize />
-      </figure>
-    </section>
-
-    <h2 id="map">
+    <!-- <h2 id="map">
       <a href="#map">Map <small>(with GeoJSON &amp; image converter)</small></a>
       <button
         :class="{
@@ -118,86 +10,27 @@
         @click="expand.map = !expand.map"
         aria-label="toggle"
       ></button>
-    </h2>
-    <section v-if="expand.map">
+    </h2> -->
+    <section>
       <figure style="background-color: #404a59;">
         <chart
           :options="map"
           :init-options="initOptions"
           ref="map"
+          @click="updateCityInfo"
           autoresize
         />
       </figure>
-      <p><button @click="convert">Convert to image</button></p>
     </section>
+        <div id="cityInfo">
+        <h4>城市详情</h4>
+        <p id="cityName">{{cityInfo.cityName}}</p>
+        <p id="cityValue">{{cityInfo.cityValue}}</p>
+        <button @click="add100()">+ 100</button>
+        <button @click="minus100()">- 100</button>
+    </div>
 
-    <h2 id="radar">
-      <a href="#radar">Radar chart <small>(with Vuex integration)</small></a>
-      <button
-        :class="{
-          round: true,
-          expand: expand.radar
-        }"
-        @click="expand.radar = !expand.radar"
-        aria-label="toggle"
-      ></button>
-    </h2>
-    <section v-if="expand.radar">
-      <figure>
-        <chart :options="scoreRadar" :init-options="initOptions" autoresize />
-      </figure>
-      <p>
-        <select v-model="metricIndex">
-          <option v-for="(metric, index) in metrics" :value="index" :key="index"
-            >{{ metric }}
-          </option>
-        </select>
-        <button @click="increase(1)" :disabled="isMax">Increase</button>
-        <button @click="increase(-1)" :disabled="isMin">Decrease</button>
-        <input id="async" type="checkbox" v-model="asyncCount" />
-        <label for="async">Async</label>
-      </p>
-    </section>
-
-    <h2 id="connect">
-      <a href="#connect">Connectable charts</a>
-      <button
-        :class="{
-          round: true,
-          expand: expand.connect
-        }"
-        @click="expand.connect = !expand.connect"
-        aria-label="toggle"
-      ></button>
-    </h2>
-    <section v-if="expand.connect">
-      <figure class="half">
-        <chart
-          :options="c1"
-          :init-options="initOptions"
-          group="radiance"
-          ref="c1"
-          autoresize
-        />
-      </figure>
-      <figure class="half">
-        <chart
-          :options="c2"
-          :init-options="initOptions"
-          group="radiance"
-          ref="c2"
-          autoresize
-        />
-      </figure>
-      <p>
-        <label>
-          <input type="checkbox" v-model="connected" />
-          Connected
-        </label>
-      </p>
-    </section>
-
-    <h2 id="flight">
+    <!-- <h2 id="flight">
       <a href="#flight">Manual updates</a>
       <button
         :class="{
@@ -224,20 +57,8 @@
           autoresize
         />
       </figure>
-    </section>
-
-    <footer>
-      <a href="//github.com/Justineo">@Justineo</a>|<a
-        href="//github.com/Justineo/vue-echarts/blob/master/LICENSE"
-        >MIT License</a
-      >|<a href="//github.com/Justineo/vue-echarts">View on GitHub</a>
-    </footer>
-
-    <aside :class="{ modal: true, open }" @click="open = false">
-      <img v-if="img.src" :src="img.src" :width="img.width" />
-    </aside>
-
-    <aside class="renderer">
+    </section> -->
+    <!-- <aside class="renderer">
       <button
         :class="{
           active: initOptions.renderer === 'canvas'
@@ -254,7 +75,7 @@
       >
         SVG
       </button>
-    </aside>
+    </aside> -->
   </main>
 </template>
 
@@ -262,35 +83,32 @@
 /* eslint-disable no-console */
 import qs from 'qs'
 import ECharts from '../components/ECharts.vue'
-import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
-import 'echarts/lib/chart/pie'
+import 'echarts/lib/chart/lines'
 import 'echarts/lib/chart/map'
-import 'echarts/lib/chart/radar'
-import 'echarts/lib/chart/scatter'
 import 'echarts/lib/chart/effectScatter'
 import 'echarts/lib/component/tooltip'
-import 'echarts/lib/component/polar'
 import 'echarts/lib/component/geo'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title'
 import 'echarts/lib/component/visualMap'
 import 'echarts/lib/component/dataset'
+// import 'echarts/extension/bmap'
+import 'echarts/extension/bmap/bmap'
 import 'echarts/map/js/world'
 import 'zrender/lib/svg/svg'
 
 import 'echarts-liquidfill'
-import logo from './data/logo'
 import getBar from './data/bar'
 import pie from './data/pie'
 import polar from './data/polar'
 import scatter from './data/scatter'
-import map from './data/map'
+// import map from './data/map'
 import { c1, c2 } from './data/connect'
 import store from './store'
 
 // built-in theme
-import 'echarts/theme/dark'
+// import 'echarts/theme/dark'
 
 // custom theme
 import theme from './theme.json'
@@ -313,12 +131,15 @@ export default {
     const options = qs.parse(location.search, { ignoreQueryPrefix: true })
     return {
       options,
-      logo,
       bar: getBar(),
+      cityInfo: {
+        cityName: '上海',
+        cityValue: 355
+      },
       pie,
+      planePath: 'path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z',
       polar,
       scatter,
-      map,
       c1,
       c2,
       expand: {
@@ -342,7 +163,159 @@ export default {
       open: false,
       img: {},
       flightLoaded: false,
-      flightOptions: null
+      flightOptions: null,
+      map: {
+        backgroundColor: '#404a59',
+        title: {
+          text: 'Maro 地图',
+          left: 'center',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          y: 'bottom',
+          x: 'right',
+          data: ['pm2.5', 'Top 5'],
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        geo: {
+          map: 'world',
+          center: [127.114129, 29.550339],
+          zoom: 10,
+          label: {
+            emphasis: {
+              show: false
+            }
+          },
+          itemStyle: {
+            normal: {
+              areaColor: 'gray',
+              borderColor: '#111'
+            },
+            emphasis: {
+              areaColor: '#2a333d'
+            }
+          }
+        },
+        series: [{
+          name: 'pm2.5',
+          type: 'scatter',
+          coordinateSystem: 'geo',
+          data: this.convertData(this.$store.state.data),
+          symbolSize: val => val[2] / 10,
+          tooltip: {
+            formatter: function (val) {
+              return val.name + ': ' + val.value[2]
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#ddb926'
+            }
+          }
+        },
+        {
+          name: 'Top 5',
+          type: 'effectScatter',
+          coordinateSystem: 'geo',
+          data: this.convertData(this.$store.state.data.sort((a, b) => b.value - a.value).slice(0, 6)),
+          symbolSize: val => val[2] / 10,
+          showEffectOn: 'render',
+          rippleEffect: {
+            brushType: 'stroke'
+          },
+          hoverAnimation: true,
+          tooltip: {
+            formatter: function (val) {
+              return val.name + ': ' + val.value[2]
+            }
+          },
+          label: {
+            normal: {
+              formatter: '{b}',
+              position: 'right',
+              show: true
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#f4e925',
+              shadowBlur: 10,
+              shadowColor: '#333'
+            }
+          },
+          zlevel: 1
+        },
+        {
+          type: 'lines',
+          coordinateSystem: 'geo',
+          data: [{
+            coords: [[121.43, 31.18, 100], [121.50, 25.05, 200]]
+            // lineStyle: {
+            //   type: 'dashed',
+            //   width: 1,
+            //   color: 'red',
+            //   curveness: 0.1,
+            //   opacity: 0.6,
+            //   animationEasing: 'linear',
+            //   animationDuration: 1000
+            // }
+          }, {
+            // 台北 - 东京
+            coords: [[121.50, 25.05, 200], [139.46, 35.42, 300]]
+            // lineStyle: {
+            //   type: 'dashed',
+            //   width: 3,
+            //   color: 'red',
+            //   curveness: 0.1,
+            //   opacity: 0.6,
+            //   animationEasing: 'linear',
+            //   animationDuration: 1000
+            // }
+          }, {
+            // 东京 - 上海
+            coords: [[139.46, 35.42, 300], [121.43, 31.18, 100]]
+            // lineStyle: {
+            //   type: 'dashed',
+            //   width: this.getLinearWidth(this.$store.state.data[0].value, this.$store.state.data[1].value),
+            //   color: 'red',
+            //   curveness: 0.1,
+            //   opacity: 0.6,
+            //   animationEasing: 'linear',
+            //   animationDuration: 1000
+            // }
+          }],
+          // polyline: true,
+          effect: {
+            show: true,
+            period: 5,
+            symbol: 'image://http://ivens-zhang.top/ship.png',
+            trailLength: 0.9,
+            symbolSize: 15
+            // symbol: this.planePath,
+          },
+          lineStyle: {
+            type: 'dashed',
+            width: 1,
+            color: 'red',
+            curveness: 0.1,
+            opacity: 0.6,
+            animationEasing: 'linear',
+            animationDuration: 1000
+          },
+          animation: false,
+          // // silent: true,
+          zlevel: 10
+        }
+        ]
+      }
     }
   },
   computed: {
@@ -361,6 +334,34 @@ export default {
     }
   },
   methods: {
+    updateCityInfo (param) {
+      console.log(param)
+      this.$set(this.cityInfo, 'cityName', param.data.name)
+      this.$set(this.cityInfo, 'cityValue', param.data.value[2])
+    },
+    convertData (data) {
+      const res = []
+      for (let i = 0; i < data.length; i++) {
+        const geoCoord = this.$store.state.geoCoordMap[data[i].name]
+        if (geoCoord) {
+          res.push({
+            name: data[i].name,
+            value: geoCoord.concat(data[i].value)
+          })
+        }
+      }
+      return res
+    },
+    add100 () {
+      this.$store.dispatch('add100Action', this.cityInfo.cityName)
+      this.map.series[1].data = this.convertData(this.$store.state.data.sort((a, b) => b.value - a.value).slice(0, 6))
+      this.cityInfo.cityValue += 100
+    },
+    minus100 () {
+      this.$store.dispatch('minus100Action', this.cityInfo.cityName)
+      this.map.series[1].data = this.convertData(this.$store.state.data.sort((a, b) => b.value - a.value).slice(0, 6))
+      this.cityInfo.cityValue -= 100
+    },
     handleClick () {
       console.log('click from echarts')
     },
@@ -391,18 +392,6 @@ export default {
       } else {
         this.initOptions.renderer = 'canvas'
       }
-    },
-    convert () {
-      const map = this.$refs.map
-      const { width, height } = map
-      this.img = {
-        src: map.getDataURL({
-          pixelRatio: window.devicePixelRatio || 1
-        }),
-        width,
-        height
-      }
-      this.open = true
     },
     increase (amount) {
       if (!this.asyncCount) {
@@ -504,36 +493,50 @@ export default {
         `${location.origin}${location.pathname}${query}${location.hash}`
       )
     }
-  },
-  mounted () {
-    let dataIndex = -1
-    const pie = this.$refs.pie
-    const dataLen = pie.options.series[0].data.length
-
-    setInterval(() => {
-      pie.dispatchAction({
-        type: 'downplay',
-        seriesIndex: 0,
-        dataIndex
-      })
-      dataIndex = (dataIndex + 1) % dataLen
-      pie.dispatchAction({
-        type: 'highlight',
-        seriesIndex: 0,
-        dataIndex
-      })
-      // 显示 tooltip
-      pie.dispatchAction({
-        type: 'showTip',
-        seriesIndex: 0,
-        dataIndex
-      })
-    }, 1000)
+    // 'map.renderer' (value) {
+    //   this.options.renderer = value === 'svg' ? value : undefined
+    //   let query = qs.stringify(this.options)
+    //   query = query ? '?' + query : ''
+    //   history.pushState(
+    //     {},
+    //     document.title,
+    //     `${location.origin}${location.pathname}${query}${location.hash}`
+    //   )
+    // }
+    // 观察option的变化
+    // map: {
+    //   handler (newVal, oldVal) {
+    //     if (this.chart) {
+    //       if (newVal) {
+    //         this.chart.setOption(newVal)
+    //       } else {
+    //         this.chart.setOption(oldVal)
+    //       }
+    //     } else {
+    //       this.$refs.map.init()
+    //     }
+    //     console.log('123')
+    //     this.updateCityInfo()
+    //   },
+    //   deep: true
+    // }
   }
 }
 </script>
 
 <style lang="stylus">
+#cityInfo {
+    width: 300px;
+    height: 170px;
+    background-color: grey;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    opacity: 50%;
+    color: whitesmoke;
+}
 *,
 *::before,
 *::after
@@ -544,7 +547,6 @@ html
 
 body
   margin 0
-  padding 3em 0 0
   font-family "Source Sans Pro", "Helvetica Neue", Arial, sans-serif
   color #666
   text-align center
@@ -681,7 +683,6 @@ figure
   min-width: calc(40vw + 4em)
 
   .echarts
-    // width 40vw
     width 100%
     min-width 400px
     height 300px
@@ -716,20 +717,7 @@ figure
     border-radius 3px
     box-shadow 0 0 30px rgba(0, 0, 0, .2)
 
-@media (min-width 980px)
-  figure.half
-    padding 1em 1.5em
-    min-width calc(240px + 3em)
-
-    .echarts
-      width 28vw
-      min-width 240px
-      height 180px
-
-    &:not(:last-child)
-      margin-right 15px
-
-@media (max-width 980px)
+@media (max-width 9980px)
   p
     display flex
     justify-content center
@@ -769,9 +757,8 @@ figure
         color #fff
 
   figure
-    width 100vw
+    width 100%
     margin 1em auto
-    padding 0 1em
     border none
     border-radius 0
     box-shadow none
@@ -779,7 +766,7 @@ figure
     .echarts
       width 100%
       min-width 0
-      height 75vw
+      height 50vw
 
 .renderer
   position fixed
