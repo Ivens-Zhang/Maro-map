@@ -257,40 +257,40 @@ export default {
           type: 'lines',
           coordinateSystem: 'geo',
           data: [{
-            coords: [[121.43, 31.18, 100], [121.50, 25.05, 200]]
-            // lineStyle: {
-            //   type: 'dashed',
-            //   width: 1,
-            //   color: 'red',
-            //   curveness: 0.1,
-            //   opacity: 0.6,
-            //   animationEasing: 'linear',
-            //   animationDuration: 1000
-            // }
+            coords: [[121.43, 31.18, 100], [121.50, 25.05, 200]],
+            lineStyle: {
+              type: 'dashed',
+              width: 1,
+              color: 'red',
+              curveness: 0.1,
+              opacity: 0.6,
+              animationEasing: 'linear',
+              animationDuration: 1000
+            }
           }, {
             // 台北 - 东京
-            coords: [[121.50, 25.05, 200], [139.46, 35.42, 300]]
-            // lineStyle: {
-            //   type: 'dashed',
-            //   width: 3,
-            //   color: 'red',
-            //   curveness: 0.1,
-            //   opacity: 0.6,
-            //   animationEasing: 'linear',
-            //   animationDuration: 1000
-            // }
+            coords: [[121.50, 25.05, 200], [139.46, 35.42, 300]],
+            lineStyle: {
+              type: 'dashed',
+              width: 3,
+              color: 'red',
+              curveness: 0.1,
+              opacity: 0.6,
+              animationEasing: 'linear',
+              animationDuration: 1000
+            }
           }, {
             // 东京 - 上海
-            coords: [[139.46, 35.42, 300], [121.43, 31.18, 100]]
-            // lineStyle: {
-            //   type: 'dashed',
-            //   width: this.getLinearWidth(this.$store.state.data[0].value, this.$store.state.data[1].value),
-            //   color: 'red',
-            //   curveness: 0.1,
-            //   opacity: 0.6,
-            //   animationEasing: 'linear',
-            //   animationDuration: 1000
-            // }
+            coords: [[139.46, 35.42, 300], [121.43, 31.18, 100]],
+            lineStyle: {
+              type: 'dashed',
+              width: (this.$store.state.data[0].value + this.$store.state.data[1].value) / 200,
+              color: 'red',
+              curveness: 0.1,
+              opacity: 0.6,
+              animationEasing: 'linear',
+              animationDuration: 1000
+            }
           }],
           // polyline: true,
           effect: {
@@ -301,15 +301,15 @@ export default {
             symbolSize: 15
             // symbol: this.planePath,
           },
-          lineStyle: {
-            type: 'dashed',
-            width: 1,
-            color: 'red',
-            curveness: 0.1,
-            opacity: 0.6,
-            animationEasing: 'linear',
-            animationDuration: 1000
-          },
+          // lineStyle: {
+          //   type: 'dashed',
+          //   width: 1,
+          //   color: 'red',
+          //   curveness: 0.1,
+          //   opacity: 0.6,
+          //   animationEasing: 'linear',
+          //   animationDuration: 1000
+          // },
           animation: false,
           // // silent: true,
           zlevel: 10
@@ -356,6 +356,8 @@ export default {
       this.$store.dispatch('add100Action', this.cityInfo.cityName)
       this.map.series[1].data = this.convertData(this.$store.state.data.sort((a, b) => b.value - a.value).slice(0, 6))
       this.cityInfo.cityValue += 100
+      const { map } = this.$refs
+      console.log(map)
     },
     minus100 () {
       this.$store.dispatch('minus100Action', this.cityInfo.cityName)
