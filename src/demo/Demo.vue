@@ -16,6 +16,7 @@
         <chart
           :options="map"
           :init-options="initOptions"
+          :manualUpdate="true"
           ref="map"
           @click="updateCityInfo"
           autoresize
@@ -28,6 +29,8 @@
         <p id="cityValue">{{cityInfo.cityValue}}</p>
         <button @click="add100()">+ 100</button>
         <button @click="minus100()">- 100</button>
+        <button @click="moveShip()">Move</button>
+        <button @click="resetShipPosition()">Reset</button>
     </div>
 
     <!-- <h2 id="flight">
@@ -137,6 +140,11 @@ export default {
         cityValue: 355
       },
       pie,
+      pointPositionArr: [
+        [-20.56, 12.10, 123],
+        [15.56, 4.10, 123],
+        [55.56, 4.40, 123],
+        [98.56, 15.40, 123]],
       planePath: 'path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z',
       polar,
       scatter,
@@ -187,8 +195,9 @@ export default {
         },
         geo: {
           map: 'world',
-          center: [127.114129, 29.550339],
-          zoom: 10,
+          center: [47.114129, 10.550339],
+          zoom: 1,
+          roam: 'move',
           label: {
             emphasis: {
               show: false
@@ -202,14 +211,33 @@ export default {
             emphasis: {
               areaColor: '#2a333d'
             }
-          }
+          },
+          regions: [{
+            name: 'China',
+            itemStyle: {
+              areaColor: 'green',
+              color: 'red'
+            }
+          }, {
+            name: 'Iran',
+            itemStyle: {
+              areaColor: 'red',
+              color: 'red'
+            }
+          }, {
+            name: 'Cuba',
+            itemStyle: {
+              areaColor: 'red',
+              color: 'red'
+            }
+          }]
         },
         series: [{
           name: 'pm2.5',
           type: 'scatter',
           coordinateSystem: 'geo',
           data: this.convertData(this.$store.state.data),
-          symbolSize: val => val[2] / 10,
+          symbolSize: val => val[2] / 30,
           tooltip: {
             formatter: function (val) {
               return val.name + ': ' + val.value[2]
@@ -226,7 +254,7 @@ export default {
           type: 'effectScatter',
           coordinateSystem: 'geo',
           data: this.convertData(this.$store.state.data.sort((a, b) => b.value - a.value).slice(0, 6)),
-          symbolSize: val => val[2] / 10,
+          symbolSize: val => val[2] / 30,
           showEffectOn: 'render',
           rippleEffect: {
             brushType: 'stroke'
@@ -272,7 +300,7 @@ export default {
             coords: [[121.50, 25.05, 200], [139.46, 35.42, 300]],
             lineStyle: {
               type: 'dashed',
-              width: 3,
+              width: 1,
               color: 'red',
               curveness: 0.1,
               opacity: 0.6,
@@ -284,9 +312,21 @@ export default {
             coords: [[139.46, 35.42, 300], [121.43, 31.18, 100]],
             lineStyle: {
               type: 'dashed',
-              width: (this.$store.state.data[0].value + this.$store.state.data[1].value) / 200,
+              width: 1,
               color: 'red',
               curveness: 0.1,
+              opacity: 0.6,
+              animationEasing: 'linear',
+              animationDuration: 1000
+            }
+          }, {
+            // 台北 - 纽约
+            coords: [[121.50, 25.05, 200], [-73.56, 40.40]],
+            lineStyle: {
+              type: 'dashed',
+              width: 1,
+              color: 'red',
+              curveness: 0.4,
               opacity: 0.6,
               animationEasing: 'linear',
               animationDuration: 1000
@@ -313,6 +353,18 @@ export default {
           animation: false,
           // // silent: true,
           zlevel: 10
+        }, {
+          name: '',
+          type: 'scatter',
+          coordinateSystem: 'geo',
+          data: [{ name: '123', value: [-50.56, 25.40, 123] }],
+          symbol: 'image://http://dreamoon.top/ship1.png',
+          symbolSize: 18,
+          itemStyle: {
+            normal: {
+              color: '#ddb926'
+            }
+          }
         }
         ]
       }
@@ -334,6 +386,24 @@ export default {
     }
   },
   methods: {
+    resetShipPosition () {
+      this.map.series[3].data[0].value = [-50.56, 25.40, 123]
+      this.$refs.map.mergeOptions(this.map)
+    },
+    async moveShip () {
+      for (const val of this.pointPositionArr) {
+        await this.sleep(2000)
+        await this.changeShipPosition(val)
+      }
+    },
+    async changeShipPosition (newPosition) {
+      this.map.series[3].data[0].value = newPosition
+      this.$refs.map.mergeOptions(this.map)
+    },
+    // sleep time expects milliseconds
+    sleep (time) {
+      return new Promise((resolve) => setTimeout(resolve, time))
+    },
     updateCityInfo (param) {
       console.log(param)
       this.$set(this.cityInfo, 'cityName', param.data.name)
@@ -350,6 +420,7 @@ export default {
           })
         }
       }
+      console.log(res, 'res')
       return res
     },
     add100 () {

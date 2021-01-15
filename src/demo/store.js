@@ -36,6 +36,10 @@ export default new Vuex.Store({
     {
       name: '台北',
       value: 279
+    },
+    {
+      name: '纽约',
+      value: 289
     }
     ],
     geoCoordMap: {
@@ -46,7 +50,8 @@ export default new Vuex.Store({
       大庆: [125.03, 46.58],
       东京: [139.46, 35.42],
       上海: [121.43, 31.18],
-      台北: [121.50, 25.05]
+      台北: [121.50, 25.05],
+      纽约: [-73.56, 40.40]
     }
   },
   getters: {
