@@ -23,7 +23,7 @@
         />
       </figure>
     </section>
-        <div id="cityInfo">
+    <div id="cityInfo">
         <h4>城市详情</h4>
         <p id="cityName">{{cityInfo.cityName}}</p>
         <p id="cityValue">{{cityInfo.cityValue}}</p>
@@ -32,53 +32,23 @@
         <button @click="moveShip()">Move</button>
         <button @click="resetShipPosition()">Reset</button>
     </div>
+    <chart
+      id="dataChart2"
+      :options="dataChart2"
+      :init-options="initOptions"
+      :manualUpdate="true"
+      ref="dataChart2"
+      autoresize
+    />
+    <chart
+      id="dataChart1"
+      :options="dataChart1"
+      :init-options="initOptions"
+      :manualUpdate="true"
+      ref="dataChart1"
+      autoresize
+    />
 
-    <!-- <h2 id="flight">
-      <a href="#flight">Manual updates</a>
-      <button
-        :class="{
-          round: true,
-          expand: expand.flight
-        }"
-        @click="expand.flight = !expand.flight"
-        aria-label="toggle"
-      ></button>
-    </h2>
-    <section v-if="expand.flight">
-      <p>
-        <small
-          >You may use <code>manual-update</code> prop for performance critical
-          use cases.</small
-        >
-      </p>
-      <p><button :disabled="flightLoaded" @click="loadFlights">Load</button></p>
-      <figure style="background-color: #003;">
-        <chart
-          ref="flight"
-          :init-options="initOptions"
-          :options="flightOptions"
-          autoresize
-        />
-      </figure>
-    </section> -->
-    <!-- <aside class="renderer">
-      <button
-        :class="{
-          active: initOptions.renderer === 'canvas'
-        }"
-        @click="initOptions.renderer = 'canvas'"
-      >
-        Canvas
-      </button>
-      <button
-        :class="{
-          active: initOptions.renderer === 'svg'
-        }"
-        @click="initOptions.renderer = 'svg'"
-      >
-        SVG
-      </button>
-    </aside> -->
   </main>
 </template>
 
@@ -135,9 +105,80 @@ export default {
     return {
       options,
       bar: getBar(),
+      dataChart2: {
+        xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          axisLine: {
+            lineStyle: {
+              color: '#43b7d6'
+            }
+          }
+        },
+        grid: {
+          x: 35,
+          y: 15,
+          x2: 20,
+          y2: 25
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: {
+            lineStyle: {
+              color: '#43b7d6'
+            }
+          }
+        },
+        series: [{
+          data: [150, 230, 224, 218, 135, 147, 260],
+          type: 'line'
+        }]
+      },
       cityInfo: {
         cityName: '上海',
         cityValue: 355
+      },
+      dataChart1: {
+        legend: {
+          width: '100',
+          height: 'auto',
+          padding: 0,
+          align: 'left'
+        },
+        tooltip: {
+          confine: true
+        },
+        grid: {
+          x: 35,
+          y: 15,
+          x2: 20,
+          y2: 25
+        },
+        xAxis: {
+          type: 'category',
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          axisLine: {
+            lineStyle: {
+              color: '#43b7d6'
+            }
+          }
+        },
+        yAxis: {
+          type: 'value',
+          axisLine: {
+            lineStyle: {
+              color: '#43b7d6'
+            }
+          }
+        },
+        series: [{
+          data: [120, 200, 150, 80, 70, 110, 130],
+          type: 'bar',
+          showBackground: true,
+          backgroundStyle: {
+            color: 'rgba(180, 180, 180, 0.2)'
+          }
+        }]
       },
       pie,
       pointPositionArr: [
@@ -188,13 +229,14 @@ export default {
           orient: 'vertical',
           y: 'bottom',
           x: 'right',
-          data: ['pm2.5', 'Top 5'],
+          data: ['pm3.5', 'Top 4'], // 修改数值以不显示 legend
           textStyle: {
             color: '#fff'
           }
         },
         geo: {
           map: 'world',
+          show: true,
           center: [47.114129, 10.550339],
           zoom: 1,
           roam: 'move',
@@ -205,32 +247,20 @@ export default {
           },
           itemStyle: {
             normal: {
-              areaColor: 'gray',
-              borderColor: '#111'
+              areaColor: '#101f32',
+              borderColor: '#43b7d6'
             },
             emphasis: {
               areaColor: '#2a333d'
             }
-          },
-          regions: [{
-            name: 'China',
-            itemStyle: {
-              areaColor: 'green',
-              color: 'red'
-            }
-          }, {
-            name: 'Iran',
-            itemStyle: {
-              areaColor: 'red',
-              color: 'red'
-            }
-          }, {
-            name: 'Cuba',
-            itemStyle: {
-              areaColor: 'red',
-              color: 'red'
-            }
-          }]
+          }
+          // regions: [{
+          //   name: 'China',
+          //   itemStyle: {
+          //     areaColor: 'green',
+          //     color: 'red'
+          //   }
+          // }]
         },
         series: [{
           name: 'pm2.5',
@@ -333,14 +363,14 @@ export default {
             }
           }],
           // polyline: true,
-          effect: {
-            show: true,
-            period: 5,
-            symbol: 'image://http://ivens-zhang.top/ship.png',
-            trailLength: 0.9,
-            symbolSize: 15
-            // symbol: this.planePath,
-          },
+          // effect: {
+          //   show: true,
+          //   period: 5,
+          //   // symbol: 'image://http://ivens-zhang.top/ship.png',
+          //   trailLength: 0.9,
+          //   symbolSize: 15
+          //   // symbol: this.planePath,
+          // },
           // lineStyle: {
           //   type: 'dashed',
           //   width: 1,
@@ -593,6 +623,11 @@ export default {
     //   },
     //   deep: true
     // }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.$refs.dataChart1.resize()
+    })
   }
 }
 </script>
@@ -602,13 +637,42 @@ export default {
     width: 300px;
     height: 170px;
     background-color: grey;
-    margin: auto;
+    margin: 0;
+    padding: 0;
     display: block;
     position: absolute;
     top: 50px;
     right: 20px;
     opacity: 50%;
     color: whitesmoke;
+}
+#dataChart2 {
+  width: 200px;
+  height: 170px;
+  background-color: rgba(16,31,50,.3);
+  margin: 0;
+  padding: 0;
+  display: block;
+  position: absolute;
+  bottom: 210px;
+  left: 10px;
+  opacity: 50%;
+  color: whitesmoke;
+  overflow: hidden;
+}
+#dataChart1 {
+  width: 200px;
+  height: 170px;
+  background-color: rgba(16,31,50,.3);
+  margin: 0;
+  padding: 0;
+  display: block;
+  position: absolute;
+  bottom: 40px;
+  left: 10px;
+  opacity: 50%;
+  color: whitesmoke;
+  overflow: hidden;
 }
 *,
 *::before,
