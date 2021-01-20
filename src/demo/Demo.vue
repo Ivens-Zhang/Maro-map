@@ -12,7 +12,7 @@
       ></button>
     </h2> -->
     <section>
-      <figure style="background-color: #404a59;">
+      <figure style="background-color: #0C1626;">
         <chart
           :options="map"
           :init-options="initOptions"
@@ -24,13 +24,13 @@
       </figure>
     </section>
     <div id="cityInfo">
-        <h4>城市详情</h4>
+        <h4>港口详情</h4>
         <p id="cityName">{{cityInfo.cityName}}</p>
         <p id="cityValue">{{cityInfo.cityValue}}</p>
         <button @click="add100()">+ 100</button>
         <button @click="minus100()">- 100</button>
-        <button @click="moveShip()">Move</button>
-        <button @click="resetShipPosition()">Reset</button>
+        <button @click="moveShip()">▶</button>
+        <button @click="resetShipPosition()">reset</button>
     </div>
     <chart
       id="dataChart2"
@@ -214,7 +214,7 @@ export default {
       flightLoaded: false,
       flightOptions: null,
       map: {
-        backgroundColor: '#404a59',
+        backgroundColor: '#0C1626',
         title: {
           text: 'Maro 地图',
           left: 'center',
@@ -247,7 +247,7 @@ export default {
           },
           itemStyle: {
             normal: {
-              areaColor: '#101f32',
+              areaColor: '#101F32',
               borderColor: '#43b7d6'
             },
             emphasis: {
@@ -636,7 +636,8 @@ export default {
 #cityInfo {
     width: 300px;
     height: 170px;
-    background-color: grey;
+    background-color: rgba(16,31,50,.3);
+    border 1px;
     margin: 0;
     padding: 0;
     display: block;
