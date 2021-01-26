@@ -27,6 +27,7 @@
     "vue": "^2.5.2",
     "vue-draggable-progressbar": "^1.0.2",
     "vue-histogram-slider": "^0.3.8",
+    "vue-i18n": "^8.22.4",
     "vue-play-button": "^1.0.5",
     "vue-progress-path": "0.0.2",
     "vue-progressbar": "^0.7.5",

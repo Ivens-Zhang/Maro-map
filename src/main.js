@@ -18,6 +18,8 @@ Vue.component(HistogramSlider.name, HistogramSlider);
 import {getLocalStorage, setLocalStorage, getObjectLocalStorage ,setObjectLocalStorage, removeLocalStorage}
 from '../src/stroage/stroage.js'
 
+import i18n from '@/plugins/i18n' // 导入vue-i18n
+
 Vue.prototype.$getLocalStorage=getLocalStorage
 Vue.prototype.$setLocalStorage=setLocalStorage
 Vue.prototype.$getObjectLocalStorage=getObjectLocalStorage
@@ -38,6 +40,7 @@ L.Icon.Default.mergeOptions({
 new Vue({
   el: '#app',
   router,
+  i18n,
   render: h => h(App),
   components: { App },
   template: '<App/>'
