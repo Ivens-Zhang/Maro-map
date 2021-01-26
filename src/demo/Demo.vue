@@ -12,7 +12,7 @@
       ></button>
     </h2> -->
     <section>
-      <figure style="background-color: #0C1626;">
+      <figure style="background-color: #0C1626;margin:0;padding:0;">
         <chart
           :options="map"
           :init-options="initOptions"
@@ -23,6 +23,10 @@
         />
       </figure>
     </section>
+    <div id="leftHeader">
+    </div>
+    <div id="rightHeader">
+    </div>
     <div id="cityInfo">
         <h4>港口详情</h4>
         <p id="cityName">{{cityInfo.cityName}}</p>
@@ -217,9 +221,12 @@ export default {
         backgroundColor: '#0C1626',
         title: {
           text: 'Maro 地图',
+          padding: [25, 400],
           left: 'center',
+          top: 0,
           textStyle: {
-            color: '#fff'
+            fontSize: 52,
+            color: '#43b7d6'
           }
         },
         tooltip: {
@@ -237,8 +244,8 @@ export default {
         geo: {
           map: 'world',
           show: true,
-          center: [47.114129, 10.550339],
-          zoom: 1,
+          center: [20.114129, 5.550339],
+          zoom: 0.9,
           roam: 'move',
           label: {
             emphasis: {
@@ -637,12 +644,12 @@ export default {
     width: 300px;
     height: 170px;
     background-color: rgba(16,31,50,.3);
-    border 1px;
+    border 1px solid #43b7d6;
     margin: 0;
     padding: 0;
     display: block;
     position: absolute;
-    top: 50px;
+    top: 250px;
     right: 20px;
     opacity: 50%;
     color: whitesmoke;
@@ -674,6 +681,32 @@ export default {
   opacity: 50%;
   color: whitesmoke;
   overflow: hidden;
+}
+#leftHeader {
+  z-index: 199;
+  width: 950px;
+  height: 30px;
+  position: absolute;
+  top: 5px;
+  left: 0px;
+  opacity: 30%;
+  border-bottom: 70px solid blue;
+  border-left: 0px solid transparent;
+  border-right: 50px solid transparent;
+  box-shadow: -50px 10px 58px #DDD;
+}
+#rightHeader {
+  z-index: 199;
+  width: 950px;
+  height: 30px;
+  position: absolute;
+  top: 5px;
+  right: 0px;
+  opacity: 30%;
+  border-bottom: 70px solid blue;
+  border-left: 50px solid transparent;
+  border-right: 0px solid transparent;
+  box-shadow: 50px 10px 58px #DDD;
 }
 *,
 *::before,
