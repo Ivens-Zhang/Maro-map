@@ -45,7 +45,7 @@
     padding: 0px;
     margin: 0px;
     height: 60px;
-    background-image: url("../assets/left.png"), url("../assets/right.png");
+    background-image: url("../assets/left_cn.png"), url("../assets/right.png");
     background-repeat: no-repeat, no-repeat;
     background-size: contain, 250px;
     background-position: left, right 20px top 20px;

@@ -21,11 +21,11 @@
     <el-container style="pointer-events:none; background:none; position:relative; ">
         <el-aside :width="current_width_l+'px'" style="pointer-events:all; align-self:center;  left:0%; position:relative; ">
             <el-tabs type="card">
-                <el-tab-pane label="Busy Ranklist">
+                <el-tab-pane :label="this.$t('normal.busyRanklist')">
                     <rank_list_2 :title="'line'" :line_data="play_single_line_cap" :line_data_change="play_data_change"></rank_list_2>
                     <rank_list_2 :title="'port'" :line_data="play_single_port_cap" :line_data_change="play_data_change"></rank_list_2>
                 </el-tab-pane>
-                <el-tab-pane label="Laden Transfer">
+                <el-tab-pane :label="this.$t('normal.ladenTransfer')">
                     <heatmap :title="'laden_transfer'" :line_data="full_laden_from_to" :line_data_change="play_data_change"></heatmap>
                 </el-tab-pane>
             </el-tabs>
@@ -33,13 +33,13 @@
         </el-aside>
         <el-aside :width="current_width_r+'px'" style="pointer-events:all; position:absolute; align-self:center; right:0%; ">
             <el-tabs type="card">
-                <el-tab-pane label="Business Metrics">
+                <el-tab-pane :label="this.$t('normal.businessMetrics')">
                     <stack_chart :title="'all_ports'" :line_data="range_all_ports_shortage_fulfill" :line_data_change="range_data_change" :data_play_position="data_play_percent" :tick_converter="cur_tick_converter"></stack_chart>
                 </el-tab-pane>
-                <el-tab-pane label="Port">
+                <el-tab-pane :label="this.$t('normal.port')">
                     <stack_chart_2 :title="'port_container'" :line_data="range_single_port_metrics" :line_data_change="range_data_change" :data_play_position="data_play_percent" :tick_converter="cur_tick_converter"></stack_chart_2>
                 </el-tab-pane>
-                <el-tab-pane label="Vessel">
+                <el-tab-pane :label="this.$t('normal.vessel')">
                     <stack_chart_2 :title="'vessel_container'" :line_data="range_single_vessel_metrics" :line_data_change="range_data_change" :data_play_position="data_play_percent" :tick_converter="cur_tick_converter"></stack_chart_2>
                 </el-tab-pane>
             </el-tabs>

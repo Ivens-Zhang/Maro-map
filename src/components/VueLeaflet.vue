@@ -21,11 +21,11 @@
                         <span style="font-size:12px;font-weight: bold">{{vessel.name}}</span>
                         <br />
                         <div style="font-size:10px;color:grey">
-                            laden:{{vessel.full}}
+                            {{$t('vessel.laden')}}:{{vessel.full}}
                             <br />
-                            remaining_space:{{vessel.remaining_space}}
+                            {{$t('vessel.remainingSpace')}}:{{vessel.remaining_space}}
                             <br />
-                            empty:{{vessel.empty}}
+                            {{$t('vessel.empty')}}:{{vessel.empty}}
                         </div>
                     </div>
                 </l-tooltip>
@@ -36,11 +36,11 @@
                         <span style="font-size:12px;font-weight: bold">{{vessel.name}}</span>
                         <br />
                         <div style="font-size:10px;color:grey">
-                            laden:{{vessel.full}}
+                            {{$t('vessel.laden')}}:{{vessel.full}}
                             <br />
-                            remaining_space:{{vessel.remaining_space}}
+                            {{$t('vessel.remainingSpace')}}:{{vessel.remaining_space}}
                             <br />
-                            empty:{{vessel.empty}}
+                            {{$t('vessel.empty')}}:{{vessel.empty}}
                         </div>
                     </div>
                 </l-tooltip>
@@ -56,34 +56,34 @@
                             <br />
                             <div style="width:200px">
                                 <div style="float:left;width:40%">
-                                    <span style="font-size:13px">Real-time</span>
+                                    <span style="font-size:13px">{{$t('port.realTime')}}</span>
                                     <br />
                                     <div style="font-size:11px;color:grey">
-                                        booking: {{marker.booking}}
+                                        {{$t('port.booking')}}: {{marker.booking}}
                                         <br />
-                                        laden: {{marker.full}}
+                                        {{$t('port.laden')}}: {{marker.full}}
                                         <br />
-                                        empty: {{marker.empty}}
+                                        {{$t('port.empty')}}: {{marker.empty}}
                                         <br />
-                                        fulfillment: {{marker.fulfillment}}
+                                        {{$t('port.fulfillment')}}: {{marker.fulfillment}}
                                         <br />
-                                        shortage: {{marker.shortage}}
+                                        {{$t('port.shortage')}}: {{marker.shortage}}
                                         <br />
                                     </div>
                                 </div>
                                 <div style="float:left;width:57%">
-                                    <span style="font-size:13px">Accumulated</span>
+                                    <span style="font-size:13px">{{$t('port.accumulated')}}</span>
                                     <br />
                                     <div style="font-size:11px;color:grey">
-                                        booking: {{marker.acc_booking}} + {{marker.booking}}
+                                        {{$t('port.booking')}}: {{marker.acc_booking}} + {{marker.booking}}
                                         <br />
-                                        laden: {{marker.acc_full}} + {{marker.full}}
+                                        {{$t('port.laden')}}: {{marker.acc_full}} + {{marker.full}}
                                         <br />
-                                        empty: {{marker.acc_empty}} + {{marker.empty}}
+                                        {{$t('port.empty')}}: {{marker.acc_empty}} + {{marker.empty}}
                                         <br />
-                                        fulfillment: {{marker.acc_fulfillment}} + {{marker.fulfillment}}
+                                        {{$t('port.fulfillment')}}: {{marker.acc_fulfillment}} + {{marker.fulfillment}}
                                         <br />
-                                        shortage: {{marker.acc_shortage}} + {{marker.shortage}}
+                                        {{$t('port.shortage')}}: {{marker.acc_shortage}} + {{marker.shortage}}
                                         <br />
                                     </div>
                                 </div>
@@ -214,23 +214,24 @@ export default {
             demand,
             icon_vessel_obvious,
             input: 0,
-            z: 200,
+            z: 300,
             locations,
             icon,
-            center: [51.505, -0.09],
+            center: [21.505, 5.09],
             opacity: 0.6,
             mapOptions: {
                 zoomControl: false,
                 attributionControl: false,
                 zoomSnap: false,
             },
-            zoom: 3,
-            minZoom: 2,
+            zoom: 15,
+            minZoom: 3,
             maxZoom: 20,
             tileProviders: [{
                 "name": "test",
                 "visible": true,
-                "url": "https://api.mapbox.com/styles/v1/meroychen/ckiod6ao60b0p17sg086wtnb4/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWVyb3ljaGVuIiwiYSI6ImNraTc2NTR2ejRlNGQyeHJtc29jcTJ4ZXUifQ.xrCXPnyPfIuxHpXXdmcPMQ"
+                // "url": "https://api.mapbox.com/styles/v1/meroychen/ckiod6ao60b0p17sg086wtnb4/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWVyb3ljaGVuIiwiYSI6ImNraTc2NTR2ejRlNGQyeHJtc29jcTJ4ZXUifQ.xrCXPnyPfIuxHpXXdmcPMQ"
+                "url": "https://api.mapbox.com/styles/v1/zhangy123/ckkessgis1ktq17oad1yky6sf/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiemhhbmd5MTIzIiwiYSI6ImNra2RyMGprczA1amsybnF0NmZmMjZ0MXcifQ.cFSvfTNV6AQKP4g2FmTL7w"
             }],
             markers: [],
             route_data: [],

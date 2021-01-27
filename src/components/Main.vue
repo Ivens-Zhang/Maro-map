@@ -12,15 +12,15 @@
     <div style="
     color:#dee4ec;position:absolute;font-size:13px;z-index:10000;line-height:20px;
     top:2%;margin-left:300px;width:200px;font-family:'Digital Sans EF'">
-        <div style="display:inline-flex;">Route:</div>
-        <el-select  style="background:#dee4e;" v-model="selected_route" size="mini" multiple placeholder="Select Route">
+        <div style="display:inline-flex;">{{$t('normal.route')}}:</div>
+        <el-select  style="background:#dee4e;" v-model="selected_route" size="mini" multiple :placeholder="this.$t('normal.selectRoute')">
             <el-option v-for="x in route_data" :key="x.name" :label="x.name" :value="x.name"></el-option>
         </el-select>
     </div>
     <div style="
     color:#dee4ec;position:absolute;font-size:13px;z-index:10000;line-height:20px;
     top:2%;margin-left:500px;width:250px;font-family:'Digital Sans EF'">
-        <div style="display:inline-flex;">Epoch:</div>
+        <div style="display:inline-flex;">{{$t('normal.epoch')}}:</div>
         <el-select style="background:#dee4e;" v-model="epoch" size="mini">
             <el-option v-for="x in epoch_index_list" :key="x" :label="x" :value="x"></el-option>
         </el-select>
@@ -28,8 +28,8 @@
     <div style="
     color:#dee4ec;position:absolute;font-size:13px;z-index:10000;line-height:20px;
     top:2%;margin-left:685px;width:300px;font-family:'Digital Sans EF'">
-        <div style="display:inline-flex;">Port:</div>
-        <el-select style="background:#dee4e;" v-model="selected_port" size="mini" multiple placeholder="Select Port">
+        <div style="display:inline-flex;">{{$t('normal.port')}}:</div>
+        <el-select style="background:#dee4e;" v-model="selected_port" size="mini" multiple :placeholder="this.$t('normal.selectPort')">
             <el-option v-for="x in port_data" :key="x.name" :label="x.name" :value="x.name"></el-option>
         </el-select>
     </div>

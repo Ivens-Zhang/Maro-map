@@ -169,7 +169,7 @@ export default {
     watch: {
         line_data_change: function (oldValue, newValue) {
             // console.log("line_data_change")
-            this.chart_title = `by ${Object.keys(this.line_data)[0]}`
+            this.chart_title = this.$t('busyRanklist.' + `${Object.keys(this.line_data)[0]}`)
             render_chart(this.chart_id, Object.values(this.line_data)[0]);
         },
     },
