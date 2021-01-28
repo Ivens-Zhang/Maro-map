@@ -1,5 +1,5 @@
 <template>
-<div id="app">
+<div id="app" :key="componentKey">
     <div style="position: absolute; left: 0%; width: 100%; height:100%; z-index:2000;">
         <VueLeaflet style="background-color:rgb(8,18,23)"
         v-bind:snapshot_number="snapshot_number_active" 
@@ -7,6 +7,7 @@
         v-bind:epoch="epoch"
         v-bind:port_index="port_index"
         v-bind:play_count="play_count"
+        :providerUrl="this.$t('normal.providerUrl')"
         ></VueLeaflet>
     </div>
     <div style="
@@ -45,6 +46,23 @@
             </div>
         </div>
     </div>
+    <div class="languageSwitch" style="
+    color:#dee4ec;position:absolute;font-size:13px;z-index:10000;line-height:25px;
+    top:2%;margin-left:960px;width:250px;font-family:'Digital Sans EF';cursor: pointer;" @click="changeLanguageValue">
+        <!-- <el-tooltip :content="'Switch value: ' + languageValue" placement="top" style="display:inline-flex;">
+        <el-switch
+            v-model="languageValue"
+            active-color="rgb(126,39,56)"
+            inactive-color="rgb(26,39,56)"
+            active-text="zh"
+            inactive-text="en"
+            @change="changeLanguageValue">
+        </el-switch>
+        </el-tooltip> -->
+        <div style="width:110px;border: 1px solid white">
+            {{ $t('normal.changeLanguage') }}
+        </div>
+    </div>
 
     <maro_ext :start_date="start_date" :end_date="end_date" :data_start="data_start_percent" :data_end="data_end_percent" :data_play_percent="snapshot_number_active" :epoch="epoch" ></maro_ext>
 
@@ -70,13 +88,9 @@ export default {
     data() {
         return {
             data: new Array(),
-            prettify: function (ts) {
-                return new Date(ts).toLocaleDateString("en", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric"
-                });
-            },
+            componentKey: 0,
+            languageValue: false,
+            prettify: this.getPrettify,
             // start point of selected window
             data_start_percent: 0, 
             // end point of selected window
@@ -120,6 +134,9 @@ export default {
         };
     },
     computed: {
+        languageValue () {
+            return localStorage.getItem('lang') === 'en'
+        },
         cssVars() {
             return {
                 '--left-margin': this.left_margin + 'px',
@@ -130,6 +147,10 @@ export default {
     },
     mounted: () => {
     },
+    // beforeCreate() {
+    //     // 设置语言初始值
+    //     localStorage.setItem('lang', 'zh')
+    // },
     created: async () => {
         let data_list = await d3.json("/static/data/data_slider.json")
         this.data = data_list.map(d => new Date(d));
@@ -219,6 +240,25 @@ export default {
     },
 
     methods: {
+        getPrettify (ts) {
+            if (localStorage.getItem('lang') === 'en') {
+                return new Date(ts).toLocaleDateString("en", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric"
+                });
+            }
+            return new Date(ts).toLocaleDateString("cn", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+        },
+        changeLanguageValue () {
+            // this.languageValue = !this.languageValue
+            localStorage.getItem('lang') === 'en' ? localStorage.setItem('lang', 'zh') : localStorage.setItem('lang', 'en')
+            location.reload()
+        },
         toggle() {
             this.isPlay = !this.isPlay
             if (!this.isPlay) {

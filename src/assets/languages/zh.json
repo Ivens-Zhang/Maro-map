@@ -8,11 +8,14 @@
 		"busyRanklist": "负载排行",
 		"ladenTransfer": "负载热力图",
 		"businessMetrics": "商业指标",
-		"vessel": "船舶"
+		"vessel": "船舶",
+		"changeLanguage": "切换语言",
+		"providerUrl": "https://api.mapbox.com/styles/v1/zhangy123/ckkessgis1ktq17oad1yky6sf/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiemhhbmd5MTIzIiwiYSI6ImNra2RyMGprczA1amsybnF0NmZmMjZ0MXcifQ.cFSvfTNV6AQKP4g2FmTL7w",
+		"leftLogo": false
 	},
 	"port": {
 		"realTime": "实时",
-		"accumulated": "优化",
+		"accumulated": "累计",
 		"booking": "预定",
 		"laden": "负载",
 		"empty": "空闲",

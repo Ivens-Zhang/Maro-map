@@ -8,7 +8,7 @@
       font-family:Digital Sans EF,; 
     " :id="frame_id">
     <el-header style="text-align:center; pointer-events:none; ">
-        <el-row>
+        <el-row :class="{enLogo: enLogoFlag}">
             <el-col :span="20" id="header_left">
                 <div class="grid-content">
                 </div>
@@ -89,6 +89,7 @@ export default {
     },
     data: function () {
         return {
+            enLogoFlag: localStorage.getItem('lang') === 'en',
             range_all_ports_shortage_fulfill: new Object(), //over all shortage fulfill
             range_single_port_metrics: new Object(), // port empty full remain
             range_single_vessel_metrics: new Object(), // vessel empty full remain
@@ -525,5 +526,17 @@ export default {
 </script>
 
 <style>
+.el-row {
+    padding: 0px;
+    margin: 0px;
+    height: 60px;
+    background-image: url("../assets/left_cn.png"), url("../assets/right.png");
+    background-repeat: no-repeat, no-repeat;
+    background-size: contain, 250px;
+    background-position: left, right 20px top 20px;
+}
 
+.enLogo {
+    background-image: url("../assets/left.png"), url("../assets/right.png") !important
+}
 </style>
