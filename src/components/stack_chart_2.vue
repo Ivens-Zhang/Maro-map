@@ -25,6 +25,7 @@
 
 <script>
 import * as d3 from "d3";
+import i18n from '@/plugins/i18n'
 
 function gen_color(specifier) {
     var n = specifier.length / 6 | 0,
@@ -210,13 +211,15 @@ ${d.key} ${d.data[d.key]}`);
     let legend_root = d3
         .select("#" + legend_id)
         .attr("class", "legend_zone");
+
+    // 港口船舶表格图例
     for (let i = 0; i < titles.length; i++) {
         let title_zone = legend_root.append("div").attr("class", "legend_zone_item");
         title_zone
             .append("svg").attr("class", "legend_zone_item_content").attr("height", 10).attr("width", 10)
             .append("g").append("line").attr("x1", 0).attr("y1", 5).attr("x2", 10).attr("y2", 5).style("stroke", color(i)).style("stroke-width", 10);
         title_zone
-            .append("label").attr("class", "legend_zone_item_content").text(titles[i]);
+            .append("label").attr("class", "legend_zone_item_content").text(i18n.t('stack_chart_2.' + titles[i]));
     }
     return e;
 

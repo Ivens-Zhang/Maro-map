@@ -11,7 +11,9 @@
 		"vessel": "船舶",
 		"changeLanguage": "切换语言",
 		"providerUrl": "https://api.mapbox.com/styles/v1/zhangy123/ckkessgis1ktq17oad1yky6sf/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiemhhbmd5MTIzIiwiYSI6ImNra2RyMGprczA1amsybnF0NmZmMjZ0MXcifQ.cFSvfTNV6AQKP4g2FmTL7w",
-		"leftLogo": false
+		"leftLogo": false,
+		"optimization": "已优化",
+		"no-Optimization": "未优化"
 	},
 	"port": {
 		"realTime": "实时",
@@ -30,5 +32,14 @@
 	"busyRanklist": {
 		"route": "航线排行",
 		"port": "港口排行"
+	},
+	"stack_chart": {
+		"fulfillment": "已完成",
+		"shortage": "短缺"
+	},
+	"stack_chart_2": {
+		"full": "满载",
+		"remaining": "剩余",
+		"empty": "空箱"
 	}
 }
