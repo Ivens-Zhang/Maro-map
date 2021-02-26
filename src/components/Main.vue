@@ -34,18 +34,22 @@
             <el-option v-for="x in port_data" :key="x.name" :label="x.name" :value="x.name"></el-option>
         </el-select>
     </div>
+    
+    <!-- 时间轴 -->
     <div class="slideBar">
-        <div style="z-index:11000;display:inline-flex;">
-            <div style="z-index:11000;display:inline-flex;justify-content:center;align-items:center;">
+        <div style="z-index:11000;display:inline-flex;position:absolute; left:5%;bottom:10px">
+            <div style="z-index:11000;display:inline-flex;justify-content:flex-start;align-items:center;">
                 <div style="z-index:12000" v-bind:class="{'classPause':!isPlay,'classPlay':true}" @click="toggle">
                 </div>
             </div>
-            <div style="z-index:11000;justify-content:center;align-items:center;">
+            <div style="z-index:11000;justify-content:flex-start;align-items:center;">
                 <HistogramSlider style="opacity:1.0;z-index:12000;" :width="1100" :data="data" :prettify="prettify" :drag-interval="true" :force-edges="false" :colors="['#4facfe', '#00f2fe']" :min="new Date(2014, 11, 24).valueOf()" :max="new Date(2017, 11, 24).valueOf()" :handle-size="13" @finish="finish" />
                 <div :style="cssVars" class="play_progress"></div>
             </div>
         </div>
     </div>
+
+    <!-- 语言切换开关 -->
     <div class="languageSwitch" style="
     color:#dee4ec;position:absolute;font-size:13px;z-index:10000;line-height:25px;
     top:2%;margin-left:960px;width:250px;font-family:'Digital Sans EF';cursor: pointer;" @click="changeLanguageValue">
@@ -62,6 +66,18 @@
         <div style="width:110px;border: 1px solid white">
             {{ $t('normal.changeLanguage') }}
         </div>
+    </div>
+
+    <!-- 优化开关 -->
+    <div style="
+    color:#dee4ec;position:absolute;font-size:13px;z-index:10000;line-height:25px;
+    top:2%;margin-left:1055px;width:170px;font-family:'Digital Sans EF';cursor: pointer;">
+        <el-switch
+            v-model="optimizationFlag"
+            active-color="#0f85ff"
+            inactive-color="#ff4949">
+        </el-switch>
+        {{optimizationFlag ? $t('normal.optimization') : $t('normal.no-Optimization')}}
     </div>
 
     <maro_ext :start_date="start_date" :end_date="end_date" :data_start="data_start_percent" :data_end="data_end_percent" :data_play_percent="snapshot_number_active" :epoch="epoch" ></maro_ext>
@@ -88,6 +104,7 @@ export default {
     data() {
         return {
             data: new Array(),
+            optimizationFlag: true,
             componentKey: 0,
             languageValue: false,
             prettify: this.getPrettify,
@@ -218,20 +235,45 @@ export default {
             this.index_list = playList['index']
             this.play_status = playList['status']
         },
+        // play_status() {
+        //     let that = this
+        //     let count;
+        //     let index_list_interval
+        //     if (this.play_status == 1 && this.index_list != []) {
+        //         count = Math.max(that.play_count, 0)
+        //         index_list_interval = setInterval(function () {
+        //             that.snapshot_number_active = that.index_list[count]
+        //             that.play_count = count
+        //             count = count + 5
+        //             if (count >= that.index_list.length) {
+        //                 count = 0
+        //                 that.snapshot_number_active = that.index_list[count]
+        //                 that.play_count = count
+        //                 // console.log(that.index_list, 'index_list');
+        //                 that.toggle()
+        //                 clearInterval(index_list_interval);
+        //             }
+        //         }, 750);
+
+        //     } else {
+        //         clearInterval(index_list_interval);
+        //     }
+        // },
         play_status() {
             let that = this
             let count;
+            let index_list_interval
             if (this.play_status == 1 && this.index_list != []) {
                 count = Math.max(that.play_count, 0)
                 this.fix_index_interval = setInterval(function () {
                     that.snapshot_number_active = that.index_list[count]
                     that.play_count = count
-                    count++;
+                    count = count + 5
                     if (count >= that.index_list.length) count = 0;
                 }, 750);
 
             } else {
-                clearInterval(this.fix_index_interval);
+                window.clearInterval(this.fix_index_interval);
             }
         },
         snapshot_number_active() {
@@ -240,6 +282,7 @@ export default {
     },
 
     methods: {
+        // 根据语言切换日期显示格式
         getPrettify (ts) {
             if (localStorage.getItem('lang') === 'en') {
                 return new Date(ts).toLocaleDateString("en", {
@@ -307,11 +350,11 @@ export default {
 }
 
 .slideBar {
-    position: absolute;
+    position: fixed;
     z-index: 10000;
-    bottom: 0%;
-    width: 100%;
-
+    bottom: 3%;
+    left: 25%;
+    height: 10%;
 }
 
 .classPlay {
