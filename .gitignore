@@ -1,6 +1,6 @@
 .DS_Store
 node_modules/
-static/data/
+static/data/epoch_499/
 /dist/
 npm-debug.log*
 yarn-debug.log*
