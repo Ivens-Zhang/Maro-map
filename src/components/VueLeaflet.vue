@@ -288,7 +288,7 @@ export default {
     providerUrl: {
       type: String,
       default:
-        "https://api.mapbox.com/styles/v1/zhangy123/ckkessgis1ktq17oad1yky6sf/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiemhhbmd5MTIzIiwiYSI6ImNra2RyMGprczA1amsybnF0NmZmMjZ0MXcifQ.cFSvfTNV6AQKP4g2FmTL7w",
+        "http://localhost:8081/zh/{z}/{x}/{y}.jpg",
     },
   },
   data() {
@@ -315,8 +315,7 @@ export default {
         {
           name: "test",
           visible: true,
-          // "url": "https://api.mapbox.com/styles/v1/meroychen/ckiod6ao60b0p17sg086wtnb4/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWVyb3ljaGVuIiwiYSI6ImNraTc2NTR2ejRlNGQyeHJtc29jcTJ4ZXUifQ.xrCXPnyPfIuxHpXXdmcPMQ"
-          url: this.providerUrl,
+          url: this.providerUrl
         },
       ],
       markers: [],
@@ -398,7 +397,7 @@ export default {
       });
     },
     snapshot_number() {
-        let vessel_run_data = []
+      let vessel_run_data = []
       this.previous_ports = this.markers;
       d3.json(
         `/static/data/epoch_${this.epoch}/port_run_data/port_run_${this.snapshot_number}.json`

@@ -6,13 +6,13 @@ const port = 8081
 
 // 需要访问的文件的存放目录
 // 这里使用相对路径，匹配当前地图文件存放在前端项目中的情况。
-let documentRoot = 'assets/map';
+let documentRoot = 'assets/map_';
 
 let server = http.createServer((req, res) => {
 
-		let url = req.url;
-		let file = documentRoot + url;
-		console.log(file);
+		// 这里对 url 做了去除首字母的处理
+		let url = req.url.substr(1);
+		let file = documentRoot + url;	// flie 格式为：assets/map_zh/5/21/12.jpg
 
 		fs.readFile(file, (err, data) => {
 				if (err) {
@@ -23,7 +23,6 @@ let server = http.createServer((req, res) => {
 					res.end();
 				} else {
 					res.writeHeader(200, {
-						// 'content-type' : 'text/html;charset="utf-8"'
 					});
 					res.write(data); //将index.html显示在客户端
 					res.end();

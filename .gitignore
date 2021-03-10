@@ -1,7 +1,8 @@
 .DS_Store
 node_modules/
 /dist/
-/src/assets/map/
+/src/assets/map_en
+/src/assets/map_zh
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

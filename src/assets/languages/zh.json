@@ -10,7 +10,7 @@
 		"businessMetrics": "商业指标",
 		"vessel": "船舶",
 		"changeLanguage": "切换语言",
-		"providerUrl": "https://api.mapbox.com/styles/v1/zhangy123/ckkessgis1ktq17oad1yky6sf/tiles/512/{z}/{x}/{y}?access_token=pk.eyJ1Ijoiemhhbmd5MTIzIiwiYSI6ImNra2RyMGprczA1amsybnF0NmZmMjZ0MXcifQ.cFSvfTNV6AQKP4g2FmTL7w",
+		"providerUrl": "http://localhost:8081/zh/{z}/{x}/{y}.jpg",
 		"leftLogo": false,
 		"optimization": "已优化",
 		"no-Optimization": "未优化"
