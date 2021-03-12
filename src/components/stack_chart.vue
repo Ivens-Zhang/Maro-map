@@ -242,7 +242,7 @@ export default {
         title: String,
         line_data: Object,
         line_data_change: Number,
-        data_play_position: Number,
+        data_play_position: Number, // 光标位置
         tick_converter: Object,
     },
     data: function () {

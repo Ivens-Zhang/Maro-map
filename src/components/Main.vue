@@ -1,5 +1,6 @@
 <template>
 <div id="app" :key="componentKey">
+    <!-- 这个组件中传入的 play_count 没有实际作用 -->
     <div style="position: absolute; left: 0%; width: 100%; height:100%; z-index:2000;">
         <VueLeaflet style="background-color:rgb(8,18,23)"
         v-bind:snapshot_number="snapshot_number_active" 
@@ -268,7 +269,7 @@ export default {
                 this.fix_index_interval = setInterval(function () {
                     that.snapshot_number_active = that.index_list[count]
                     that.play_count = count
-                    count = count + 5
+                    count = count + 1
                     if (count >= that.index_list.length) count = 0;
                 }, 750);
 

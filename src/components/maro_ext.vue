@@ -66,12 +66,17 @@
           v-on:width_change="width_change_left"
         />
       </el-aside>
+      <!-- 右侧图表 -->
       <el-aside
         :width="current_width_r + 'px'"
         style="pointer-events: all; position: fixed; right: 20px; top: 500px"
       >
         <el-tabs type="card">
           <el-tab-pane :label="this.$t('normal.businessMetrics')">
+            <echart_demo :chartData="resBussinessMetrics" :legend="bussinessMetricsLegend"></echart_demo>
+          </el-tab-pane>
+          <!-- 注释了之前的商业数据 -->
+          <!-- <el-tab-pane :label="this.$t('normal.businessMetrics')">
             <stack_chart
               :title="'all_ports'"
               :line_data="range_all_ports_shortage_fulfill"
@@ -79,7 +84,7 @@
               :data_play_position="data_play_percent"
               :tick_converter="cur_tick_converter"
             ></stack_chart>
-          </el-tab-pane>
+          </el-tab-pane> -->
           <el-tab-pane :label="this.$t('normal.port')">
             <stack_chart_2
               :title="'port_container'"
@@ -107,8 +112,6 @@
         />
       </el-aside>
     </el-container>
-    <!-- <el-footer style="height: 80px; pointer-events: none; background: none">
-    </el-footer> -->
   </el-container>
 </template>
 
@@ -119,6 +122,7 @@ import stack_chart_2 from "./stack_chart_2.vue";
 import rank_list_2 from "./rank_list_2.vue";
 import heatmap from "./heatmap.vue";
 import zoom_btn from "./zoom_btn.vue";
+import echart_demo from './EchartDemo.vue';
 
 class tick_to_time {
   constructor(start_time, end_time) {
@@ -153,8 +157,11 @@ export default {
   data: function () {
     return {
       timer: null,
+      resBussinessMetrics: [],
+      bussinessMetricsLegend: [this.$t('port.fulfillment'),this.$t('port.shortage')],
+      portData: [], // 港口数据，包括 fulfillment、shortage
       enLogoFlag: localStorage.getItem("lang") === "en",
-      range_all_ports_shortage_fulfill: new Object(), //over all shortage fulfill
+      range_all_ports_shortage_fulfill: {}, //over all shortage fulfill
       range_single_port_metrics: new Object(), // port empty full remain
       range_single_vessel_metrics: new Object(), // vessel empty full remain
       play_single_line_cap: new Object(),
@@ -198,9 +205,44 @@ export default {
     };
   },
   methods: {
+    getBussinessMetricsData () {
+      this.portData = []
+      for (let i = 0; i <= 1120; i++) {
+        // 注意这里的 epoch
+        let fulfillmentTickCount = 0
+        let shortageTickCount = 0
+        d3.json(`/static/data/epoch_0/port_run_data/port_run_${i}.json`).then(data => {
+          data.forEach(singalPortData => {
+            fulfillmentTickCount = singalPortData.fulfillment
+            shortageTickCount = singalPortData.shortage
+          })
+          this.portData.push({fulfillmentTickCount, shortageTickCount})
+          console.log({fulfillmentTickCount, shortageTickCount});
+        })
+      }
+      console.log(this.portData);
+    },
+    // 向组件里传值
+    updateBussinessMetricsData () {
+      const tick = this.data_play_percent
+      const receivePortData = this.portData
+      const timeRange = 50  // tick 前后延伸的范围
+      let res = []
+      // FIXME 这里没有考虑挪动时间轴导致总时长不足 50 的情况
+      if (tick < timeRange) {  // tick 在前半段
+        res = receivePortData.slice(0, tick + timeRange)
+      } else if (receivePortData.length - tick < timeRange) {  // tick 在后半段
+        res = receivePortData.slice(tick - timeRange, receivePortData.length - 1)
+      } else {
+        res = receivePortData.slice(tick - timeRange, tick + timeRange)
+      }
+      this.resBussinessMetrics = res
+    },
     async update_range_data(data_start, data_end, data_play_percent, epoch) {
       // load all data
-      //console.log("1", data_start, data_end, data_play_percent, epoch);
+      console.log("1", data_start, data_end, data_play_percent, epoch);
+
+      // 用于 maro_ext 组件 mount 的时候初始化
       if (!this.data_loaded) {
         this.data_loaded = true;
         this.vessel_ref_data = await d3.json(`/static/data/all.json`);
@@ -212,7 +254,7 @@ export default {
 
       // load range data
       let start = 0;
-      let end = data_play_percent + 50;
+      let end = data_play_percent + 20;
       if (end > data_end) {
         end = data_end;
       }
@@ -229,24 +271,41 @@ export default {
       ) {
         start = this.range_cache.data_play_percent + 1;
       } else {
-        this.raw_port_data = new Array();
-        this.raw_ship_data = new Array();
-        this.decisions = new Array();
-        this.orders = new Array();
+        this.raw_port_data = []
+        this.raw_ship_data = []
+        this.decisions = []
+        this.orders = []
       }
 
       this.range_cache.data_start = data_start;
       this.range_cache.data_play_percent = data_play_percent;
       this.range_cache.epoch = epoch;
 
-      let temp_port_data = new Array();
-      let temp_ship_data = new Array();
-      let temp_decisions = new Array();
-      let temp_orders = new Array();
+      let temp_port_data = []
+      let temp_ship_data = []
+      let temp_decisions = []
+      let temp_orders = []
+
+      console.log('se', start, end);
 
       // console.log("async operations", start, end);
 
       for (let i = start; i < end; i++) {
+        // d3.json(`/static/data/epoch_${epoch}/port_run_data/port_run_${i}.json`).then(res => {
+        //   temp_port_data.push(res)
+        //   d3.json(`/static/data/epoch_${epoch}/vessel_run_data/vessel_run_${i}.json`).then(res => {
+        //     temp_ship_data.push(res)
+        //     d3.json(`/static/data/epoch_${epoch}/decision_run_data/decision_run_${i}.json`).then(res => {
+        //       temp_decisions.push(res)
+        //       d3.json(`/static/data/epoch_${epoch}/order_run_data/order_run_${i}.json`).then(res => {
+        //         temp_orders.push(res)
+        //       })
+        //     })
+        //   })
+        // }).catch(err => {
+        //   console.log(err);
+        // })
+
         temp_port_data.push(
           await d3.json(
             `/static/data/epoch_${epoch}/port_run_data/port_run_${i}.json`
@@ -293,35 +352,74 @@ export default {
         }
       }
 
+      // console.log('DDD', temp_port_data, temp_ship_data, temp_decisions, temp_orders);
       //cal range data
 
+      // if (this.raw_port_data.length > 200) {
+      //   this.raw_port_data = this.raw_port_data.slice(100)
+      // }
+
+      // 清理老数据
+      if (this.raw_port_data.length && this.raw_ship_data.length && this.decisions.length && this.orders.length) {
+        // console.log('1');
+        this.raw_port_data = new Array(this.raw_port_data.length).fill(null)
+        this.raw_ship_data = new Array(this.raw_ship_data.length).fill(null)
+        this.decisions = new Array(this.decisions.length).fill(null)
+        this.orders = new Array(this.orders.length).fill(null)
+      }
+
+      console.log('temp_port_data', temp_port_data);
+      // 加入新数据
       this.raw_port_data = this.raw_port_data.concat(temp_port_data);
       this.raw_ship_data = this.raw_ship_data.concat(temp_ship_data);
       this.decisions = this.decisions.concat(temp_decisions);
       this.orders = this.orders.concat(temp_orders);
 
-      start = data_play_percent - 50;
+      // 清理 temp 变量
+      temp_port_data = [];
+      temp_ship_data = [];
+      temp_decisions = []
+      temp_orders = []
+
+      // after
+      // this.raw_port_data = temp_port_data
+      // this.raw_ship_data = temp_ship_data
+      // this.decisions = temp_decisions
+      // this.orders = temp_orders
+      console.log('EEE', this.raw_port_data, this.raw_ship_data, this.decisions, this.orders);
+      // console.log('EEE', this.raw_port_data);
+
+      // 循环读取区间数据结束，start 增加
+      start = data_play_percent - 20;
       if (start < data_start) {
         start = data_start;
       }
       // console.log("async operations completed", start, end);
 
       // generate range_all_ports_shortage_fulfill, range_single_port_metrics
-      let range_all_ports_data = new Array();
-      let range_single_port_data = new Object();
+      let range_all_ports_data = []
+      let range_single_port_data = {}
 
+      console.log('zy', start, end);
+
+      // 遍历 star-end 中每个港口的信息，并做提取
       for (let i = start; i < end; i++) {
         let fulfillment = 0;
         let shortage = 0;
+
+        // 遍历每个 tick
         let tick_data = this.raw_port_data[i];
 
+        // 遍历 tick 中的所有港口
         for (let j = 0; j < tick_data.length; j++) {
+
+          // 累加所有港口的 fulfillment、shortage
           fulfillment += tick_data[j].fulfillment;
           shortage += tick_data[j].shortage;
           if (!range_single_port_data.hasOwnProperty(tick_data[j].port_name)) {
             range_single_port_data[tick_data[j].port_name] = {
-              full: new Array(),
-              empty: new Array(),
+              full: [],
+              empty: [],
             };
           }
           range_single_port_data[tick_data[j].port_name].full.push({
@@ -339,11 +437,15 @@ export default {
           shortage: shortage,
         });
       }
+      // console.log('tick_data', tick_data);
+      // 当前 range_all_ports_data 为 range 内所有港口的 fulfillment、shortage 的集合
       // console.log("range_all_ports_data", range_all_ports_data)
-      let list_fulfillment = new Array();
-      let list_shortage = new Array();
-      let acc_fulfillment = 0;
-      let acc_shortage = 0;
+      // this.raw_port_data = null
+
+      let list_fulfillment = []
+      let list_shortage = []
+      // 将 range_all_ports_data 拆分成 list_fulfillment、list_shortage 两个数组
+      // 在将 list_fulfillment、list_shortage 合并到 range_all_ports_shortage_fulfill 对象中
       for (let i = 0; i < range_all_ports_data.length; i++) {
         list_fulfillment.push({
           x: range_all_ports_data[i].index,
@@ -364,7 +466,7 @@ export default {
       let range_vessel_data = new Object();
 
       for (let i = start; i < end; i++) {
-        let tick_data = new Array();
+        let tick_data = []
         this.raw_ship_data[i].forEach((router) => {
           router.vessel.forEach((vessel) => {
             tick_data.push(vessel);
@@ -374,9 +476,9 @@ export default {
         for (let j = 0; j < tick_data.length; j++) {
           if (!range_vessel_data.hasOwnProperty(tick_data[j].name)) {
             range_vessel_data[tick_data[j].name] = {
-              full: new Array(),
-              empty: new Array(),
-              remaining: new Array(),
+              full: [],
+              empty: [],
+              remaining: [],
             };
           }
           range_vessel_data[tick_data[j].name].full.push({
@@ -396,7 +498,8 @@ export default {
       this.range_single_vessel_metrics = range_vessel_data;
 
       this.range_data_change += 1;
-      // console.log("range_data_change", "this.range_all_ports_shortage_fulfill")
+      // tick_data = null
+      console.log("range_all_ports_shortage_fulfill", this.range_all_ports_shortage_fulfill)
     },
     update_play_data(data_start, data_end, data_play_percent, epoch) {
       let start = data_start;
@@ -542,23 +645,11 @@ export default {
         })
       }
     },
-    // async execute_operation() {
-    //   if (!this.operation_executing && this.operations.length > 8) {
-    //     console.log('yee');
-    //     this.operation_executing = true;
-    //     this.operations = await this.sliceArray(this.operations).finally(() => {
-    //       this.operation_executing = false;
-    //     })
-    //   }
-    // },
-    // async sliceArray(arr) {
-    //   return arr.slice(-6)
+    // refresh() {
+    //   // window.clearTimeout(this.timer)
+    //   this.execute_operation()
+    //   var timer2 = setTimeout(this.refresh, 100);
     // }
-    refresh() {
-      // window.clearTimeout(this.timer)
-      this.execute_operation()
-      var timer2 = setTimeout(this.refresh, 100);
-    }
   },
   components: {
     d3,
@@ -567,6 +658,7 @@ export default {
     heatmap,
     stack_chart_2,
     zoom_btn,
+    echart_demo
   },
   watch: {
     data_start: function (oldValue, newValue) {
@@ -598,30 +690,33 @@ export default {
       });
     },
     data_play_percent: function (oldValue, newValue) {
-      // console.log(this.data_start, this.data_end, this.data_play_percent)
-      let cc = async () => {
-        await this.update_range_data(
-          this.data_start,
-          this.data_end,
-          newValue,
-          this.epoch
-        ).then(
-          () => {
-            this.update_play_data(
-              this.data_start,
-              this.data_end,
-              newValue,
-              this.epoch
-            );
-          },
-          (reason) => {
-            // console.log(reason);
-          }
-        );
-      }
-      // console.log(cc,'cc!');
-      this.operations.push(cc);
-      console.log(this.operations,'op!');
+      this.updateBussinessMetricsData()
+      // // console.log(this.data_start, this.data_end, this.data_play_percent)
+      // let operationsArr = []
+      // let cc = async () => {
+      //   await this.update_range_data(
+      //     this.data_start,
+      //     this.data_end,
+      //     newValue,
+      //     this.epoch
+      //   ).then(
+      //     () => {
+      //       this.update_play_data(
+      //         this.data_start,
+      //         this.data_end,
+      //         newValue,
+      //         this.epoch
+      //       );
+      //     }
+      //   );
+      // }
+      // // console.log(cc,'cc!');
+      // operationsArr.push(cc);
+      // this.operations = operationsArr
+      // console.log(this.operations,'op!');
+      // // setInterval(this.execute_operation, 100);
+      // // use setTimeout simulate setInterval
+      // this.execute_operation()
     },
     epoch: function (oldValue, newValue) {
       this.raw_port_data = new Array();
@@ -640,7 +735,6 @@ export default {
               this.data_start,
               this.data_end,
               this.data_play_percent,
-              newValue
             );
           },
           (reason) => {
@@ -652,6 +746,7 @@ export default {
     },
   },
   mounted: function () {
+    this.getBussinessMetricsData()
     this.operations.push(async () => {
       await this.update_range_data(
         this.data_start,
@@ -675,9 +770,8 @@ export default {
     this.side_panel_resize(undefined);
     //console.log("cur_tick_converter", this.start_date, this.end_date)
     this.cur_tick_converter = new tick_to_time(this.start_date, this.end_date);
-    // setInterval(this.execute_operation, 100);
-    // use setTimeout simulate setInterval
-    this.refresh()
+
+    this.execute_operation()
   },
   computed: {
     frame_id: function () {
