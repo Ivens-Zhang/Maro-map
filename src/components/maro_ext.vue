@@ -71,21 +71,17 @@
         :width="current_width_r + 'px'"
         style="pointer-events: all; position: fixed; right: 20px; top: 500px"
       >
-        <el-tabs type="card">
-          <el-tab-pane :label="this.$t('normal.businessMetrics')">
-            <echart_demo :chartData="resBussinessMetrics" :legend="bussinessMetricsLegend"></echart_demo>
+        <el-tabs type="card"  @tab-click="handleTabClick">
+          <el-tab-pane :label="this.$t('normal.businessMetrics')" >
+            <business_metrics_chart :id="businessMetricsChartID" :chartData="resBussinessMetrics" :legend="bussinessMetricsLegend"></business_metrics_chart>
           </el-tab-pane>
-          <!-- 注释了之前的商业数据 -->
-          <!-- <el-tab-pane :label="this.$t('normal.businessMetrics')">
-            <stack_chart
-              :title="'all_ports'"
-              :line_data="range_all_ports_shortage_fulfill"
-              :line_data_change="range_data_change"
-              :data_play_position="data_play_percent"
-              :tick_converter="cur_tick_converter"
-            ></stack_chart>
-          </el-tab-pane> -->
-          <el-tab-pane :label="this.$t('normal.port')">
+          <el-tab-pane :label="this.$t('normal.port')" name="portChartPane">
+            <port_chart ref="portChartRef" @changePortName="changePortName" :allPortsNames="allPortsNames" :chartData="resSinglePortData" :legend="bussinessMetricsLegend"></port_chart>
+          </el-tab-pane>
+          <el-tab-pane :label="this.$t('normal.vessel')" name="vesselChartPane">
+            <vessel_chart ref="vesselChartRef" @changeVesselName="changeVesselName" :allVesselName="allVesselName" :chartData="resSingleVesselData" :legend="vesselChartLegend"></vessel_chart>
+          </el-tab-pane>
+          <!-- <el-tab-pane :label="this.$t('normal.port')">
             <stack_chart_2
               :title="'port_container'"
               :line_data="range_single_port_metrics"
@@ -93,8 +89,8 @@
               :data_play_position="data_play_percent"
               :tick_converter="cur_tick_converter"
             ></stack_chart_2>
-          </el-tab-pane>
-          <el-tab-pane :label="this.$t('normal.vessel')">
+          </el-tab-pane> -->
+          <!-- <el-tab-pane :label="this.$t('normal.vessel')">
             <stack_chart_2
               :title="'vessel_container'"
               :line_data="range_single_vessel_metrics"
@@ -102,7 +98,7 @@
               :data_play_position="data_play_percent"
               :tick_converter="cur_tick_converter"
             ></stack_chart_2>
-          </el-tab-pane>
+          </el-tab-pane> -->
         </el-tabs>
         <zoom_btn
           style="top: 10px; right: 10px; position: absolute"
@@ -122,7 +118,9 @@ import stack_chart_2 from "./stack_chart_2.vue";
 import rank_list_2 from "./rank_list_2.vue";
 import heatmap from "./heatmap.vue";
 import zoom_btn from "./zoom_btn.vue";
-import echart_demo from './EchartDemo.vue';
+import business_metrics_chart from './BusinessMetricsChart.vue';
+import port_chart from './PortChart.vue';
+import vessel_chart from './VesselChart.vue'
 
 class tick_to_time {
   constructor(start_time, end_time) {
@@ -157,8 +155,11 @@ export default {
   data: function () {
     return {
       timer: null,
+      businessMetricsChartID: 'businessMetricsChartID',
+      portChartFlag: false,
       resBussinessMetrics: [],
       bussinessMetricsLegend: [this.$t('port.fulfillment'),this.$t('port.shortage')],
+      vesselChartLegend: [this.$t('vessel.laden'),this.$t('vessel.empty'),this.$t('vessel.remainingSpace')],
       portData: [], // 港口数据，包括 fulfillment、shortage
       enLogoFlag: localStorage.getItem("lang") === "en",
       range_all_ports_shortage_fulfill: {}, //over all shortage fulfill
@@ -202,13 +203,129 @@ export default {
       operations: new Array(),
       operation_executing: false,
       cur_tick_converter: new Object(),
+      allPortsNames: [],
+      isShowPortChart: false,  // 判断是否点击过右侧港口表格
+      resSinglePortData: [],
+      singlePortData: [],
+      allVesselName: [],
+      singleVesselData: [],
+      resSingleVesselData: []
     };
   },
   methods: {
+    // ----------------------------------- 船舶图表 ----------------------------------------------------
+    updateSingleVesselData() {
+      if (this.singleVesselData) {
+        const tick = this.data_play_percent
+        const receiveSingleVesselData = this.singleVesselData
+        const timeRange = 50  // tick 前后延伸的范围
+        let res = []
+          if (tick < timeRange) {  // tick 在前半段
+          res = receiveSingleVesselData.slice(0, tick + timeRange)
+        } else if (receiveSingleVesselData.length - tick < timeRange) {  // tick 在后半段
+          res = receiveSingleVesselData.slice(tick - timeRange, receiveSingleVesselData.length - 1)
+        } else {
+          res = receiveSingleVesselData.slice(tick - timeRange, tick + timeRange)
+        }
+        this.resSingleVesselData = res
+      }
+    },
+    changeVesselName (vesselName) {
+      console.log(vesselName, '123123');
+      let full
+      let remaining_space
+      let empty
+      let res = []
+      for (let i = 0; i <= 1120; i++) {
+        d3.json(`/static/data/epoch_0/vessel_run_data/vessel_run_${i}.json`).then(data => {
+          data.forEach(routeItem => {
+            routeItem.vessel.forEach(item => {
+              if (item.name === vesselName) {
+                res.push({full: item.full, empty: item.empty, remaining_space: item.remaining_space})
+              }
+            })
+          })
+        })
+      }
+      this.singleVesselData = res
+    },
+    getAllVesselNames () {
+      let allVesselNameTemp = []
+      d3.json(`/static/data/epoch_0/vessel_run_data/vessel_run_0.json`).then(data => {
+        data.forEach(routeItem => {
+          routeItem.vessel.forEach(item => {
+            allVesselNameTemp.push(item.name)
+          })
+        })
+      })
+      this.allVesselName = allVesselNameTemp
+      // console.log(vesselName, 've');
+    },
+    // ----------------------------------- 港口图表 ----------------------------------------------------
+    updataSinglePortData () {
+      if (this.singlePortData.length !== 0) {
+        const tick = this.data_play_percent
+        const receiveSinglePortData = this.singlePortData
+        const timeRange = 50  // tick 前后延伸的范围
+        let res = []
+        // FIXME 这里没有考虑挪动时间轴导致总时长不足 50 的情况
+        if (tick < timeRange) {  // tick 在前半段
+          res = receiveSinglePortData.slice(0, tick + timeRange)
+        } else if (receiveSinglePortData.length - tick < timeRange) {  // tick 在后半段
+          res = receiveSinglePortData.slice(tick - timeRange, receiveSinglePortData.length - 1)
+        } else {
+          res = receiveSinglePortData.slice(tick - timeRange, tick + timeRange)
+        }
+        this.resSinglePortData = res
+      }
+    },
+    changePortName (data) {
+      let selectPortName = data
+      let singlePortDataTemp = []
+      let singlePortFulfillmentTickCount = 0  // 指定港口第 tick 天的 fulfillment
+      let singlePortShortageTickCount = 0 // 指定港口第 tick 天的 shortage
+      for (let i = 0; i <= 1120; i++) {
+        // 注意这里的 epoch 写死了 epoch_0
+        d3.json(`/static/data/epoch_0/port_run_data/port_run_${i}.json`).then(data => {
+          data.forEach(item => {
+            if (item.port_name === selectPortName) {
+              singlePortFulfillmentTickCount = item.fulfillment
+              singlePortShortageTickCount = item.shortage
+            }
+          })
+          singlePortDataTemp.push({singlePortFulfillmentTickCount, singlePortShortageTickCount})
+        })
+      }
+      this.singlePortData = singlePortDataTemp
+      console.log(this.singlePortData, 'f123');
+    },
+    // FIXME 这里只设置了 portChartPane 的重新渲染
+    // 这里给右侧图表 tab 添加点击事件，用于重新渲染图表。
+    handleTabClick (tab, event) {
+      if (tab.name === 'portChartPane') {
+        this.isShowPortChart = true
+        this.$refs.portChartRef.count ++
+      } else if (tab.name === 'vesselChartPane') {
+        this.$refs.vesselChartRef.count ++
+        console.log('111');
+      }
+    },
+    // 将所有港口名称保存为数组，传入子组件用作 el-select
+    getAllPortsNames () {
+      let allPortsNamesTemp = []
+      d3.json(`/static/data/port.json`).then(data => {
+        data.forEach(item => {
+          allPortsNamesTemp.push(item.tooltip)
+        })
+      })
+      this.allPortsNames = allPortsNamesTemp
+      // allPortsNamesTemp = null
+    },
+    // ----------------------------------- 商业指标图表 ----------------------------------------------------
     getBussinessMetricsData () {
       this.portData = []
       for (let i = 0; i <= 1120; i++) {
-        // 注意这里的 epoch
+        // 注意这里的 epoch 写死了 epoch_0
         let fulfillmentTickCount = 0
         let shortageTickCount = 0
         d3.json(`/static/data/epoch_0/port_run_data/port_run_${i}.json`).then(data => {
@@ -217,10 +334,10 @@ export default {
             shortageTickCount = singalPortData.shortage
           })
           this.portData.push({fulfillmentTickCount, shortageTickCount})
-          console.log({fulfillmentTickCount, shortageTickCount});
+          // console.log({fulfillmentTickCount, shortageTickCount});
         })
       }
-      console.log(this.portData);
+      // console.log(this.portData);
     },
     // 向组件里传值
     updateBussinessMetricsData () {
@@ -238,9 +355,10 @@ export default {
       }
       this.resBussinessMetrics = res
     },
+    // ----------------------------------- 船舶图表 ----------------------------------------------------
     async update_range_data(data_start, data_end, data_play_percent, epoch) {
       // load all data
-      console.log("1", data_start, data_end, data_play_percent, epoch);
+      // console.log("1", data_start, data_end, data_play_percent, epoch);
 
       // 用于 maro_ext 组件 mount 的时候初始化
       if (!this.data_loaded) {
@@ -368,7 +486,7 @@ export default {
         this.orders = new Array(this.orders.length).fill(null)
       }
 
-      console.log('temp_port_data', temp_port_data);
+      // console.log('temp_port_data', temp_port_data);
       // 加入新数据
       this.raw_port_data = this.raw_port_data.concat(temp_port_data);
       this.raw_ship_data = this.raw_ship_data.concat(temp_ship_data);
@@ -386,7 +504,7 @@ export default {
       // this.raw_ship_data = temp_ship_data
       // this.decisions = temp_decisions
       // this.orders = temp_orders
-      console.log('EEE', this.raw_port_data, this.raw_ship_data, this.decisions, this.orders);
+      // console.log('EEE', this.raw_port_data, this.raw_ship_data, this.decisions, this.orders);
       // console.log('EEE', this.raw_port_data);
 
       // 循环读取区间数据结束，start 增加
@@ -658,7 +776,9 @@ export default {
     heatmap,
     stack_chart_2,
     zoom_btn,
-    echart_demo
+    business_metrics_chart,
+    port_chart,
+    vessel_chart
   },
   watch: {
     data_start: function (oldValue, newValue) {
@@ -691,6 +811,8 @@ export default {
     },
     data_play_percent: function (oldValue, newValue) {
       this.updateBussinessMetricsData()
+      this.updataSinglePortData()
+      this.updateSingleVesselData()
       // // console.log(this.data_start, this.data_end, this.data_play_percent)
       // let operationsArr = []
       // let cc = async () => {
@@ -747,6 +869,8 @@ export default {
   },
   mounted: function () {
     this.getBussinessMetricsData()
+    this.getAllPortsNames()
+    this.getAllVesselNames()
     this.operations.push(async () => {
       await this.update_range_data(
         this.data_start,

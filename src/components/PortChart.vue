@@ -1,5 +1,22 @@
 <template>
-  <div>
+  <div id="container">
+    <div style="height: 40px" class="in_chart_select">
+        <el-select
+          v-model="portName"
+          placeholder="select series"
+          style="margin: 10px"
+          size="mini"
+          @change="changePortName"
+        >
+          <el-option
+            v-for="item in allPortsNames"
+            :key="item"
+            :label="item"
+            :value="item"
+          >
+          </el-option>
+        </el-select>
+      </div>
     <div id="main"></div>
   </div>
 </template>
@@ -11,33 +28,37 @@ export default {
   props: {
     chartData: Array,
     legend: Array,
+    allPortsNames: Array
+    // id: String,
   },
   watch: {
+    count: function (oldValue, newValue) {
+      this.portChart.resize()
+    },
     chartData: function (oldValue, newValue) {
       let fulfillmentArr = [];
       let shortageArr = [];
       newValue.forEach((item) => {
-        fulfillmentArr.push(item.fulfillmentTickCount);
-        shortageArr.push(item.shortageTickCount);
+        fulfillmentArr.push(item.singlePortFulfillmentTickCount);
+        shortageArr.push(item.singlePortShortageTickCount);
       });
       this.option.series[0].data = fulfillmentArr;
       this.option.series[1].data = shortageArr;
 
       // console.log(fulfillmentArr, shortageArr, 'fffffffff');
-      this.bussinessMetricsChart.setOption(this.option);
+      this.portChart.setOption(this.option);
     },
     legend: function (oldValue, newValue) {
-      this.option.legend.data = newValue
-      this.bussinessMetricsChart.setOption(this.option);
-    }
+      this.option.legend.data = newValue;
+      this.portChart.setOption(this.option);
+    },
   },
   data() {
     return {
-      bussinessMetricsChart: null,
+      portChart: null,
+      portName: '',
+      count: 1,
       option: {
-        // title: {
-        //   text: "堆叠区域图",
-        // },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -77,7 +98,7 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [120, 132, 101, 134, 90, 230, 210],
+            data: [1120, 2132, 1201, 1344, 910, 2330, 2110],
           },
           {
             name: this.legend[1],
@@ -94,17 +115,17 @@ export default {
     };
   },
   methods: {
+    changePortName (data) {
+      this.$emit('changePortName', data)
+    },
     renderChart(id) {
-      this.bussinessMetricsChart = echarts.init(document.getElementById(id));
-      this.bussinessMetricsChart.setOption(this.option);
+      this.portChart = echarts.init(document.getElementById(id));
+      this.portChart.setOption(this.option);
     },
   },
   mounted() {
-    // var chartDom = document.getElementById("main");
-    // var myChart = echarts.init(chartDom);
-    // option && myChart.setOption(option);
     this.$nextTick(function () {
-      this.renderChart("main");
+      this.renderChart('main');
     });
   },
 };
