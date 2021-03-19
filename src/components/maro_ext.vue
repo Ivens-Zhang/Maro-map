@@ -40,6 +40,10 @@
       >
         <el-tabs type="card">
           <el-tab-pane :label="this.$t('normal.busyRanklist')">
+            <rank_list :id="'rankListChartID'" :title="this.$t('busyRanklist.route')" :chartData="vesselRankData" :portsName="allVessel"></rank_list>
+            <rank_list :id="'rankListChartID2'" :title="this.$t('busyRanklist.port')" :chartData="portRankData" :portsName="allPortsNames"></rank_list>
+          </el-tab-pane>
+          <!-- <el-tab-pane :label="this.$t('normal.busyRanklist')">
             <rank_list_2
               :title="'line'"
               :line_data="play_single_line_cap"
@@ -50,21 +54,24 @@
               :line_data="play_single_port_cap"
               :line_data_change="play_data_change"
             ></rank_list_2>
-          </el-tab-pane>
+          </el-tab-pane> -->
           <el-tab-pane :label="this.$t('normal.ladenTransfer')">
+            <port_heat_map :id="'portHeatMapID'" :chartData="portHeatMapData"></port_heat_map>
+          </el-tab-pane>
+          <!-- <el-tab-pane :label="this.$t('normal.ladenTransfer')">
             <heatmap
               :title="'laden_transfer'"
               :line_data="full_laden_from_to"
               :line_data_change="play_data_change"
             ></heatmap>
-          </el-tab-pane>
+          </el-tab-pane> -->
         </el-tabs>
-        <zoom_btn
+        <!-- <zoom_btn
           style="top: 10px; right: 10px; position: absolute"
           :width_options="width_options"
           :current_option="current_width_l"
           v-on:width_change="width_change_left"
-        />
+        /> -->
       </el-aside>
       <!-- 右侧图表 -->
       <el-aside
@@ -100,12 +107,12 @@
             ></stack_chart_2>
           </el-tab-pane> -->
         </el-tabs>
-        <zoom_btn
+        <!-- <zoom_btn
           style="top: 10px; right: 10px; position: absolute"
           :width_options="width_options"
           :current_option="current_width_r"
           v-on:width_change="width_change_right"
-        />
+        /> -->
       </el-aside>
     </el-container>
   </el-container>
@@ -121,6 +128,8 @@ import zoom_btn from "./zoom_btn.vue";
 import business_metrics_chart from './BusinessMetricsChart.vue';
 import port_chart from './PortChart.vue';
 import vessel_chart from './VesselChart.vue'
+import rank_list from './RankList.vue'
+import port_heat_map from './PortHeatMap.vue';
 
 class tick_to_time {
   constructor(start_time, end_time) {
@@ -175,8 +184,8 @@ export default {
       raw_ship_data: new Array(),
       org_data: new Object(),
       width_options: [300, 600],
-      current_width_l: 300,
-      current_width_r: 300,
+      current_width_l: 450,
+      current_width_r: 450,
       play_cache: {
         data_start: 0,
         data_end: 0,
@@ -209,10 +218,89 @@ export default {
       singlePortData: [],
       allVesselName: [],
       singleVesselData: [],
-      resSingleVesselData: []
+      resSingleVesselData: [],
+      portRankData: [],
+      vesselRankData: [],
+      allVessel: [],
+      portHeatMapData: []
     };
   },
   methods: {
+    // ----------------------------------- 热力图表 ----------------------------------------------------
+    updateHeatMapData () {
+      const tick = this.data_play_percent
+      let res = []
+      d3.json(`/static/data/epoch_0/order_run_data/order_run_${tick}.json`).then(data => {
+        data.forEach(item => {
+          res.push([item.dest_port_idx, item.src_port_idx, item.quantity])
+        })
+      })
+      this.portHeatMapData = res
+    },
+    getHeatMapData () {
+      let res = []
+      d3.json(`/static/data/epoch_0/order_run_data/order_run_0.json`).then(data => {
+        data.forEach(item => {
+          res.push([item.dest_port_idx, item.src_port_idx, item.quantity])
+        })
+      })
+      this.portHeatMapData = res
+    },
+    // ----------------------------------- 航线排行图表 ----------------------------------------------------
+    updateVesselRankData () {
+      const tick = this.data_play_percent
+      let vesselRankDataTemp = []
+      d3.json(`/static/data/epoch_0/vessel_run_data/vessel_run_${tick}.json`).then(data => {
+        data.forEach(item => {
+          this.allVessel.push(item.name)
+          let capAddtion = 0
+          let fullAddtion = 0
+          item.vessel.forEach(vesselItem => {
+            capAddtion += vesselItem.capacity
+            fullAddtion += vesselItem.full
+          })
+          vesselRankDataTemp.push((fullAddtion / capAddtion).toFixed(4))
+        })
+      })
+      this.vesselRankData = vesselRankDataTemp
+    },
+    getRouteRank () {
+      let res = []
+      d3.json(`/static/data/epoch_0/vessel_run_data/vessel_run_0.json`).then(data => {
+        data.forEach(item => {
+          this.allVessel.push(item.name)
+          let capAddtion = 0
+          let fullAddtion = 0
+          item.vessel.forEach(vesselItem => {
+            capAddtion += vesselItem.capacity
+            fullAddtion += vesselItem.full
+          })
+          res.push((fullAddtion / capAddtion).toFixed(4))
+        })
+      })
+      this.vesselRankData = res
+    },
+
+    // ----------------------------------- 港口排行图表 ----------------------------------------------------
+    updatePortRankData () {
+      const tick = this.data_play_percent
+      let portRankDataTemp = []
+      d3.json(`/static/data/epoch_0/port_run_data/port_run_${tick}.json`).then(data => {
+        data.forEach(item => {
+          portRankDataTemp.push(item.full / item.capacity)
+        })
+      })
+      this.portRankData = portRankDataTemp
+    },
+    getPortRank () {
+      let res = []
+      d3.json(`/static/data/epoch_0/port_run_data/port_run_0.json`).then(data => {
+        data.forEach(item => {
+          res.push(item.full / item.capacity)
+        })
+      })
+      this.portRankData = res
+    },
     // ----------------------------------- 船舶图表 ----------------------------------------------------
     updateSingleVesselData() {
       if (this.singleVesselData) {
@@ -778,7 +866,9 @@ export default {
     zoom_btn,
     business_metrics_chart,
     port_chart,
-    vessel_chart
+    vessel_chart,
+    rank_list,
+    port_heat_map
   },
   watch: {
     data_start: function (oldValue, newValue) {
@@ -813,6 +903,12 @@ export default {
       this.updateBussinessMetricsData()
       this.updataSinglePortData()
       this.updateSingleVesselData()
+
+      if (newValue % 3 === 0) {
+        this.updatePortRankData()
+        this.updateVesselRankData()
+        this.updateHeatMapData()
+      }
       // // console.log(this.data_start, this.data_end, this.data_play_percent)
       // let operationsArr = []
       // let cc = async () => {
@@ -871,6 +967,9 @@ export default {
     this.getBussinessMetricsData()
     this.getAllPortsNames()
     this.getAllVesselNames()
+    this.getRouteRank()
+    this.getPortRank()
+    this.getHeatMapData()
     this.operations.push(async () => {
       await this.update_range_data(
         this.data_start,
