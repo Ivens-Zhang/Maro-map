@@ -151,7 +151,7 @@ export default {
 
 <style scoped>
 #aaamain123 {
-  min-height: 200px;
+  min-height: 250px;
   width: 100%;
 }
 </style>

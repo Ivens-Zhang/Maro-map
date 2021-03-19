@@ -5,16 +5,14 @@
 <script>
 import * as echarts from "echarts";
 
-export default {
+export default {  
+  // FIXME 以后有时间可以给几个表格组件补充下思路注释，并做合并
   props: {
     chartData: Array,
     legend: Array,
     id: String
   },
   watch: {
-    // count: function (oldValue, newValue) {
-    //   this.bussinessMetricsChart.resize()
-    // },
     chartData: function (oldValue, newValue) {
       let fulfillmentArr = [];
       let shortageArr = [];
@@ -103,9 +101,6 @@ export default {
     },
   },
   mounted() {
-    // var chartDom = document.getElementById("main");
-    // var myChart = echarts.init(chartDom);
-    // option && myChart.setOption(option);
     this.$nextTick(function () {
       this.renderChart(this.id);
     });
@@ -115,7 +110,7 @@ export default {
 
 <style scoped>
 .main {
-  min-height: 200px;
+  min-height: 250px;
   width: 100%;
 }
 </style>
