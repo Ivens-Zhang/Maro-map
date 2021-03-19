@@ -10,7 +10,7 @@
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js",
     "commit": "git-cz",
-    "map-server": "node ./src/map-server.js"
+    "map-server": "nodemon ./src/map-server.js"
   },
   "dependencies": {
     "@skinnyjames/vue2-leaflet-canvas": "^1.1.0",
