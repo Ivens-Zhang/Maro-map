@@ -21,6 +21,11 @@ const webpackConfig = merge(baseWebpackConfig, {
       usePostCSS: true
     })
   },
+  performance: {
+    hints: 'error', 
+    maxAssetSize: 30000000000, // 整数类型（以字节为单位）
+    maxEntrypointSize: 50000000000 // 整数类型（以字节为单位）
+  },
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
     path: config.build.assetsRoot,
