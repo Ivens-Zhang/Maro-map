@@ -15,23 +15,7 @@ export default {
     portsName: Array
   },
   watch: {
-    // count: function (oldValue, newValue) {
-    //   this.vesselChart.resize();
-    //   console.log("222");
-    // },
-    // vesselName: function (newValue, oldValue) {
-    //   console.log(newValue, "dd");
-    //   this.$emit("changeVesselName", newValue);
-    // },
     chartData: function (newValue, oldValue) {
-      // let full = [];
-      // let empty = [];
-      // let remaining_space = [];
-      // newValue.forEach((item) => {
-      //   full.push(item.full);
-      //   empty.push(item.empty);
-      //   remaining_space.push(item.remaining_space);
-      // });
       if (newValue.length > 0) {
         this.option.series[0].data = newValue
         this.vesselChart.setOption(this.option);

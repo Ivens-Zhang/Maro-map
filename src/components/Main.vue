@@ -350,12 +350,45 @@ export default {
     line-height: 20px;
 }
 
-.slideBar {
-    position: fixed;
-    z-index: 10000;
-    bottom: 3%;
-    left: 25%;
-    height: 10%;
+/* 1024px 宽度因为盒模型内部元素导致宽度溢出 */
+/* @media screen and (min-width: 960px) and (max-width: 1339px){
+    .slideBar {
+        position: fixed;
+        z-index: 10000;
+        bottom: 3%; 
+        left: 8%;
+        height: 10%;
+    }
+} */
+
+@media screen and (min-width: 1340px) and (max-width: 1640px){
+    .slideBar {
+        position: fixed;
+        z-index: 10000;
+        bottom: 3%;
+        left: 8%;
+        height: 10%;
+    }
+}
+
+@media screen and (min-width: 1641px) and (max-width: 1960px){
+    .slideBar {
+        position: fixed;
+        z-index: 10000;
+        bottom: 3%;
+        left: 18%;
+        height: 10%;
+    }
+}
+
+@media screen and (min-width: 1961px){
+    .slideBar {
+        position: fixed;
+        z-index: 10000;
+        bottom: 3%;
+        left: 25%;
+        height: 10%;
+    }
 }
 
 .classPlay {

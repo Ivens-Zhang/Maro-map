@@ -29,6 +29,7 @@
       style="pointer-events: none; background: none; position: relative"
     >
       <el-aside
+        class="left_aside"
         :width="current_width_l + 'px'"
         style="
           pointer-events: all;
@@ -75,6 +76,7 @@
       </el-aside>
       <!-- 右侧图表 -->
       <el-aside
+        class="right_aside"
         :width="current_width_r + 'px'"
         style="pointer-events: all; position: fixed; right: 20px; top: 500px"
       >
@@ -1018,10 +1020,24 @@ export default {
   background-image: url("../assets/left_cn.png"), url("../assets/right_cn.png");
   background-repeat: no-repeat, no-repeat;
   background-size: contain, 250px;
-  background-position: left, right 20px top 20px;
+  background-position: left, right 100px top 20px;
 }
 
 .enLogo {
   background-image: url("../assets/left.png"), url("../assets/right.png") !important;
 }
+
+@media screen and (min-width: 1340px) and (max-width: 1640px){
+    .left_aside {
+      width: 300px !important
+    }
+    .right_aside {
+      width: 300px !important
+    }
+    .el-row {
+      background-size: contain, 150px;
+      background-position: left, right 60px top 20px;
+    }
+}
+
 </style>
