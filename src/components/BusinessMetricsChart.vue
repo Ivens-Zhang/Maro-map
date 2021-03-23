@@ -45,6 +45,9 @@ export default {
             type: "cross",
             label: {
               backgroundColor: "#6a7985",
+              formatter: params => {
+                return Math.round(params.value)
+              }
             },
           },
         },
