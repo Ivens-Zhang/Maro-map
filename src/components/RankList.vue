@@ -1,5 +1,5 @@
 <template>
-  <div :id="this.id" style="height: 300px; width: 100%"></div>
+  <div :id="this.id" style="height: 250px; width: 100%"></div>
 </template>
 
 <script>
@@ -12,23 +12,19 @@ export default {
     allVesselName: Array,
     id: String,
     title: String,
-    portsName: Array
+    portsName: Array,
   },
   watch: {
     chartData: function (newValue, oldValue) {
       if (newValue.length > 0) {
-        this.option.series[0].data = newValue
+        this.option.series[0].data = newValue;
         this.vesselChart.setOption(this.option);
       }
     },
     portsName: function (newValue, oldValue) {
-      this.option.yAxis.data = newValue
+      this.option.yAxis.data = newValue;
       this.vesselChart.setOption(this.option);
-    }
-    // legend: function (oldValue, newValue) {
-    //   this.option.legend.data = newValue;
-    //   this.vesselChart.setOption(this.option);
-    // },
+    },
   },
   data() {
     return {
@@ -40,6 +36,9 @@ export default {
           text: this.title,
           left: "55%",
           textAlign: "center",
+          textStyle: {
+            color: 'white'
+          }
         },
         grid: {
           left: "3%",
@@ -48,6 +47,11 @@ export default {
         },
         xAxis: {
           max: "dataMax",
+          axisLabel: {
+            formatter: function (val) {
+              return Math.round(val * 10000) / 100 + "%";
+            },
+          },
         },
         yAxis: {
           type: "category",
@@ -56,6 +60,11 @@ export default {
           animationDuration: 700,
           animationDurationUpdate: 300,
           max: 4, // only the largest 3 bars will be displayed
+          axisLabel: {
+            color: 'white',
+            fontSize: 15,
+            fontWeight: 'bold'
+          },
         },
         series: [
           {
@@ -63,10 +72,16 @@ export default {
             name: "X",
             type: "bar",
             data: this.chartData,
+            // barWidth: 15,
             label: {
               show: true,
-              position: "right",
+              position: "insideRight",
               valueAnimation: true,
+              formatter: (params) => {
+                let value = params.value;
+                let res = Math.round(value * 10000) / 100 + "%";
+                return res;
+              },
             },
           },
         ],

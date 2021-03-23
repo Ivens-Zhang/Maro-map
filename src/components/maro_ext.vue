@@ -424,7 +424,6 @@ export default {
             shortageTickCount = singalPortData.shortage
           })
           this.portData.push({fulfillmentTickCount, shortageTickCount})
-          // console.log({fulfillmentTickCount, shortageTickCount});
         })
       }
       // console.log(this.portData);
