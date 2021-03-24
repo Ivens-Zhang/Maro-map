@@ -1,7 +1,7 @@
 {
 	"normal": {
 		"route": "航线",
-		"epoch": "阶段",
+		"epoch": "训练轮次",
 		"port": "港口",
 		"selectRoute": "选择航线",
 		"selectPort": "选择港口",
@@ -20,7 +20,7 @@
 		"accumulated": "累计",
 		"booking": "预定",
 		"laden": "负载",
-		"empty": "空闲",
+		"empty": "空箱",
 		"fulfillment": "已完成",
 		"shortage": "短缺"
 	},
