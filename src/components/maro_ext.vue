@@ -78,7 +78,7 @@
       <el-aside
         class="right_aside"
         :width="current_width_r + 'px'"
-        style="pointer-events: all; position: fixed; right: 20px; top: 500px"
+        style="pointer-events: all; position: fixed; right: 10px; bottom: 200px"
       >
         <el-tabs type="card"  @tab-click="handleTabClick">
           <el-tab-pane :label="this.$t('normal.businessMetrics')" >
