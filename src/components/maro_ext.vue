@@ -232,7 +232,7 @@ export default {
     updateHeatMapData () {
       const tick = this.data_play_percent
       let res = []
-      d3.json(`/static/data/epoch_0/order_run_data/order_run_${tick}.json`).then(data => {
+      d3.json(`/static/data/epoch_${this.epoch}/order_run_data/order_run_${tick}.json`).then(data => {
         data.forEach(item => {
           res.push([item.dest_port_idx, item.src_port_idx, item.quantity])
         })
@@ -241,7 +241,7 @@ export default {
     },
     getHeatMapData () {
       let res = []
-      d3.json(`/static/data/epoch_0/order_run_data/order_run_0.json`).then(data => {
+      d3.json(`/static/data/epoch_${this.epoch}/order_run_data/order_run_0.json`).then(data => {
         data.forEach(item => {
           res.push([item.dest_port_idx, item.src_port_idx, item.quantity])
         })
@@ -252,7 +252,7 @@ export default {
     updateVesselRankData () {
       const tick = this.data_play_percent
       let vesselRankDataTemp = []
-      d3.json(`/static/data/epoch_0/vessel_run_data/vessel_run_${tick}.json`).then(data => {
+      d3.json(`/static/data/epoch_${this.epoch}/vessel_run_data/vessel_run_${tick}.json`).then(data => {
         data.forEach(item => {
           this.allVessel.push(item.name)
           let capAddtion = 0
@@ -268,7 +268,7 @@ export default {
     },
     getRouteRank () {
       let res = []
-      d3.json(`/static/data/epoch_0/vessel_run_data/vessel_run_0.json`).then(data => {
+      d3.json(`/static/data/epoch_${this.epoch}/vessel_run_data/vessel_run_0.json`).then(data => {
         data.forEach(item => {
           this.allVessel.push(item.name)
           let capAddtion = 0
@@ -287,7 +287,7 @@ export default {
     updatePortRankData () {
       const tick = this.data_play_percent
       let portRankDataTemp = []
-      d3.json(`/static/data/epoch_0/port_run_data/port_run_${tick}.json`).then(data => {
+      d3.json(`/static/data/epoch_${this.epoch}/port_run_data/port_run_${tick}.json`).then(data => {
         data.forEach(item => {
           portRankDataTemp.push(item.full / item.capacity)
         })
@@ -296,7 +296,7 @@ export default {
     },
     getPortRank () {
       let res = []
-      d3.json(`/static/data/epoch_0/port_run_data/port_run_0.json`).then(data => {
+      d3.json(`/static/data/epoch_${this.epoch}/port_run_data/port_run_0.json`).then(data => {
         data.forEach(item => {
           res.push(item.full / item.capacity)
         })
@@ -327,7 +327,7 @@ export default {
       let empty
       let res = []
       for (let i = 0; i <= 1120; i++) {
-        d3.json(`/static/data/epoch_0/vessel_run_data/vessel_run_${i}.json`).then(data => {
+        d3.json(`/static/data/epoch_${this.epoch}/vessel_run_data/vessel_run_${i}.json`).then(data => {
           data.forEach(routeItem => {
             routeItem.vessel.forEach(item => {
               if (item.name === vesselName) {
@@ -341,7 +341,7 @@ export default {
     },
     getAllVesselNames () {
       let allVesselNameTemp = []
-      d3.json(`/static/data/epoch_0/vessel_run_data/vessel_run_0.json`).then(data => {
+      d3.json(`/static/data/epoch_${this.epoch}/vessel_run_data/vessel_run_0.json`).then(data => {
         data.forEach(routeItem => {
           routeItem.vessel.forEach(item => {
             allVesselNameTemp.push(item.name)
@@ -376,7 +376,7 @@ export default {
       let singlePortShortageTickCount = 0 // 指定港口第 tick 天的 shortage
       for (let i = 0; i <= 1120; i++) {
         // 注意这里的 epoch 写死了 epoch_0
-        d3.json(`/static/data/epoch_0/port_run_data/port_run_${i}.json`).then(data => {
+        d3.json(`/static/data/epoch_${this.epoch}/port_run_data/port_run_${i}.json`).then(data => {
           data.forEach(item => {
             if (item.port_name === selectPortName) {
               singlePortFulfillmentTickCount = item.fulfillment
@@ -387,7 +387,6 @@ export default {
         })
       }
       this.singlePortData = singlePortDataTemp
-      console.log(this.singlePortData, 'f123');
     },
     // FIXME 这里只设置了 portChartPane 的重新渲染
     // 这里给右侧图表 tab 添加点击事件，用于重新渲染图表。
@@ -397,7 +396,6 @@ export default {
         this.$refs.portChartRef.count ++
       } else if (tab.name === 'vesselChartPane') {
         this.$refs.vesselChartRef.count ++
-        console.log('111');
       }
     },
     // 将所有港口名称保存为数组，传入子组件用作 el-select
@@ -418,7 +416,7 @@ export default {
         // 注意这里的 epoch 写死了 epoch_0
         let fulfillmentTickCount = 0
         let shortageTickCount = 0
-        d3.json(`/static/data/epoch_0/port_run_data/port_run_${i}.json`).then(data => {
+        d3.json(`/static/data/epoch_${this.epoch}/port_run_data/port_run_${i}.json`).then(data => {
           data.forEach(singalPortData => {
             fulfillmentTickCount = singalPortData.fulfillment
             shortageTickCount = singalPortData.shortage

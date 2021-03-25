@@ -45,9 +45,9 @@ export default {
             type: "cross",
             label: {
               backgroundColor: "#6a7985",
-              formatter: params => {
-                return Math.round(params.value)
-              }
+              formatter: (params) => {
+                return Math.round(params.value);
+              },
             },
           },
         },
@@ -56,8 +56,8 @@ export default {
           x: "center", // 'center' | 'left' | {number},
           y: "bottom", // 'center' | 'bottom' | {number
           textStyle: {
-            color: 'white'
-          }
+            color: "white",
+          },
         },
         grid: {
           left: "3%",
