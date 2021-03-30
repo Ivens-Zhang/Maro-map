@@ -23,7 +23,7 @@ export default {
       this.option.series[0].data = fulfillmentArr;
       this.option.series[1].data = shortageArr;
 
-      // console.log(fulfillmentArr, shortageArr, 'fffffffff');
+      this.option.title.subtext = `${this.$t('port.fulfillment')}: ${oldValue[oldValue.length - 1].fulfillmentTickCount} \n${this.$t('port.shortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
       this.bussinessMetricsChart.setOption(this.option);
     },
     legend: function (oldValue, newValue) {
@@ -36,9 +36,17 @@ export default {
       count: 1,
       bussinessMetricsChart: null,
       option: {
-        // title: {
-        //   text: "堆叠区域图",
-        // },
+        title: {
+          subtext: `${this.$t('port.fulfillment')}:  \n${this.$t('port.shortage')}: `,
+          right: '12%',
+          bottom: '8%',
+          subtextStyle: {
+            color: 'white',
+            fontSize: '15',
+            verticalAlign: 'top',
+            lineHeight: 20,
+          }
+        },
         tooltip: {
           trigger: "axis",
           axisPointer: {

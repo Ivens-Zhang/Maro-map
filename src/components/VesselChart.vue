@@ -4,7 +4,6 @@
       <el-select
         v-model="vesselName"
         placeholder="select series"
-        style="margin: 10px"
         size="mini"
       >
         <el-option
@@ -51,7 +50,8 @@ export default {
       this.option.series[0].data = full;
       this.option.series[1].data = empty;
       this.option.series[2].data = remaining_space;
-
+      // this.option.title.subtext = `${this.$t('port.fulfillment')}:  \n${this.$t('port.shortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
+      this.option.title.subtext = `${this.$t('vessel.laden')}: ${oldValue[oldValue.length - 1].full} ${this.$t('vessel.empty')}: ${oldValue[oldValue.length - 1].empty} \n${this.$t('vessel.remainingSpace')}: ${oldValue[oldValue.length - 1].remaining_space} `,
       // console.log(fulfillmentArr, shortageArr, 'fffffffff');
       this.vesselChart.setOption(this.option);
     },
@@ -66,6 +66,17 @@ export default {
       vesselName: "",
       count: 1,
       option: {
+        title: {
+          subtext: `${this.$t('vessel.laden')}:    ${this.$t('vessel.empty')}:  \n${this.$t('vessel.remainingSpace')}:  `,
+          right: '12%',
+          bottom: '8%',
+          subtextStyle: {
+            color: 'white',
+            fontSize: '15',
+            verticalAlign: 'top',
+            lineHeight: 20,
+          }
+        },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -88,7 +99,7 @@ export default {
         },
         grid: {
           left: "3%",
-          top: "13%",
+          top: "5%",
           containLabel: true,
         },
         xAxis: {
