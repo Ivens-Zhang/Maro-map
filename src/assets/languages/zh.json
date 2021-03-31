@@ -22,12 +22,14 @@
 		"laden": "负载",
 		"empty": "空箱",
 		"fulfillment": "已完成",
-		"shortage": "短缺"
+		"shortage": "短缺",
+		"placeholder": "选择港口"
 	},
 	"vessel": {
 		"remainingSpace": "剩余空间",
 		"laden": "负载",
-		"empty": "空箱"
+		"empty": "空箱",
+		"placeholder": "选择船舶"
 	},
 	"busyRanklist": {
 		"route": "航线排行",

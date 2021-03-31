@@ -23,12 +23,14 @@
 		"laden": "laden",
 		"empty": "empty",
 		"fulfillment": "fulfillment",
-		"shortage": "shortage"
+		"shortage": "shortage",
+		"placeholder": "select port"
 	},
 	"vessel": {
 		"remainingSpace": "remaining space",
 		"laden": "laden",
-		"empty": "empty"
+		"empty": "empty",
+		"placeholder": "select vessel"
 	},
 	"busyRanklist": {
 		"route": "Route Ranklist",

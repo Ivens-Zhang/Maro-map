@@ -287,8 +287,6 @@ export default {
     },
     providerUrl: {
       type: String,
-      default:
-        "http://localhost:8081/zh/{z}/{x}/{y}.jpg",
     },
   },
   data() {

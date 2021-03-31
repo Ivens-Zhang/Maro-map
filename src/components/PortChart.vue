@@ -3,7 +3,7 @@
     <div style="height: 40px" class="in_chart_select">
         <el-select
           v-model="portName"
-          placeholder="select series"
+          :placeholder="this.$t('port.placeholder')"
           style="margin: 10px"
           size="mini"
           @change="changePortName"

@@ -3,7 +3,7 @@
     <div style="height: 40px" class="in_chart_select">
       <el-select
         v-model="vesselName"
-        placeholder="select series"
+        :placeholder="this.$t('vessel.placeholder')"
         size="mini"
       >
         <el-option
