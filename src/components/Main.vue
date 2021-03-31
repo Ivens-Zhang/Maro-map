@@ -8,7 +8,7 @@
         v-bind:epoch="epoch"
         v-bind:port_index="port_index"
         v-bind:play_count="play_count"
-        :providerUrl="this.$t('normal.providerUrl')"
+        :providerUrl="this.mapUrl"
         ></VueLeaflet>
     </div>
     <!-- <div style="
@@ -92,6 +92,7 @@ import VueLeaflet from '../components/VueLeaflet.vue';
 import maro_ext from "../components/maro_ext.vue";
 import HistogramSlider from "../components/histogram/HistogramSlider.vue";
 import * as d3 from "d3"
+import os from 'os'
 
 export default {
     name: "Main",
@@ -152,6 +153,15 @@ export default {
         };
     },
     computed: {
+        mapUrl () {
+            // 接收环境参数 VUE_APP_IP（本机 ip）
+            let mapBaseUrl = process.env.VUE_APP_IP
+            if(localStorage.getItem('lang') === 'en'){
+                return `http://${mapBaseUrl}:8081/en/{z}/{x}/{y}.jpg`
+            } else {
+                return `http://${mapBaseUrl}:8081/zh/{z}/{x}/{y}.jpg`
+            }
+        },
         languageValue () {
             return localStorage.getItem('lang') === 'en'
         },
@@ -164,6 +174,7 @@ export default {
         },
     },
     mounted: () => {
+        console.log('IP',process.env)
     },
     // beforeCreate() {
     //     // 设置语言初始值
