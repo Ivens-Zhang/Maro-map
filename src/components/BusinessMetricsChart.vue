@@ -23,7 +23,7 @@ export default {
       this.option.series[0].data = fulfillmentArr;
       this.option.series[1].data = shortageArr;
 
-      this.option.title.subtext = `${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].fulfillmentTickCount}  ${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
+      this.option.title.subtext = `${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].fulfillmentTickCount}       ${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
       this.bussinessMetricsChart.setOption(this.option);
     },
     legend: function (oldValue, newValue) {
@@ -37,7 +37,7 @@ export default {
       bussinessMetricsChart: null,
       option: {
         title: {
-          subtext: `${this.$t('port.todayFulfillment')}:  ${this.$t('port.todayShortage')}: `,
+          subtext: `${this.$t('port.todayFulfillment')}:        ${this.$t('port.todayShortage')}: `,
           left: '18%',
           bottom: '12%',
           subtextStyle: {
@@ -61,7 +61,7 @@ export default {
         },
         legend: {
           data: this.legend,
-          x: "center", // 'center' | 'left' | {number},
+          right: "10%",
           top: "auto", // 'center' | 'bottom' | {number
           textStyle: {
             color: "white",
