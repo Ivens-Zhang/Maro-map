@@ -51,7 +51,7 @@ export default {
       this.option.series[1].data = empty;
       this.option.series[2].data = remaining_space;
       // this.option.title.subtext = `${this.$t('port.fulfillment')}:  \n${this.$t('port.shortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
-      this.option.title.subtext = `${this.$t('vessel.laden')}: ${oldValue[oldValue.length - 1].full} ${this.$t('vessel.empty')}: ${oldValue[oldValue.length - 1].empty} \n${this.$t('vessel.remainingSpace')}: ${oldValue[oldValue.length - 1].remaining_space} `,
+      this.option.title.subtext = `${this.$t('vessel.todayLaden')}: ${oldValue[oldValue.length - 1].full} ${this.$t('vessel.todayEmpty')}: ${oldValue[oldValue.length - 1].empty} \n${this.$t('vessel.todayRemainingSpace')}: ${oldValue[oldValue.length - 1].remaining_space} `,
       // console.log(fulfillmentArr, shortageArr, 'fffffffff');
       this.vesselChart.setOption(this.option);
     },
@@ -67,7 +67,7 @@ export default {
       count: 1,
       option: {
         title: {
-          subtext: `${this.$t('vessel.laden')}:    ${this.$t('vessel.empty')}:  \n${this.$t('vessel.remainingSpace')}:  `,
+          subtext: `${this.$t('vessel.todayLaden')}:    ${this.$t('vessel.todayEmpty')}:  \n${this.$t('vessel.todayRemainingSpace')}:  `,
           right: '12%',
           bottom: '8%',
           subtextStyle: {

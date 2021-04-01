@@ -45,7 +45,7 @@ export default {
       this.option.series[0].data = fulfillmentArr;
       this.option.series[1].data = shortageArr;
 
-      this.option.title.subtext = `${this.$t('port.fulfillment')}: ${oldValue[oldValue.length - 1].singlePortFulfillmentTickCount} \n${this.$t('port.shortage')}: ${oldValue[oldValue.length - 1].singlePortShortageTickCount}`
+      this.option.title.subtext = `${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].singlePortFulfillmentTickCount} \n${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].singlePortShortageTickCount}`
       // console.log(fulfillmentArr, shortageArr, 'fffffffff');
       this.portChart.setOption(this.option);
     },
@@ -61,7 +61,7 @@ export default {
       count: 1,
       option: {
         title: {
-          subtext: `${this.$t('port.fulfillment')}:  \n${this.$t('port.shortage')}: `,
+          subtext: `${this.$t('port.todayFulfillment')}:  \n${this.$t('port.todayShortage')}: `,
           right: '12%',
           bottom: '8%',
           subtextStyle: {
