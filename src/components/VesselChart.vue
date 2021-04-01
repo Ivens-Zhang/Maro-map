@@ -32,10 +32,8 @@ export default {
   watch: {
     count: function (oldValue, newValue) {
       this.vesselChart.resize();
-      console.log("222");
     },
     vesselName: function (newValue, oldValue) {
-      console.log(newValue,'dd');
       this.$emit("changeVesselName", newValue);
     },
     chartData: function (oldValue, newValue) {
@@ -52,7 +50,6 @@ export default {
       this.option.series[2].data = remaining_space;
       // this.option.title.subtext = `${this.$t('port.fulfillment')}:  \n${this.$t('port.shortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
       this.option.title.subtext = `${this.$t('vessel.todayLaden')}: ${oldValue[oldValue.length - 1].full} ${this.$t('vessel.todayEmpty')}: ${oldValue[oldValue.length - 1].empty} \n${this.$t('vessel.todayRemainingSpace')}: ${oldValue[oldValue.length - 1].remaining_space} `,
-      // console.log(fulfillmentArr, shortageArr, 'fffffffff');
       this.vesselChart.setOption(this.option);
     },
     legend: function (oldValue, newValue) {
@@ -68,7 +65,7 @@ export default {
       option: {
         title: {
           subtext: `${this.$t('vessel.todayLaden')}:    ${this.$t('vessel.todayEmpty')}:  \n${this.$t('vessel.todayRemainingSpace')}:  `,
-          right: '12%',
+          left: '18%',
           bottom: '8%',
           subtextStyle: {
             color: 'white',
@@ -92,14 +89,14 @@ export default {
         legend: {
           data: this.legend,
           x: "center", // 'center' | 'left' | {number},
-          y: "bottom", // 'center' | 'bottom' | {number
+          top: "auto",
           textStyle: {
             color: 'white'
           }
         },
         grid: {
           left: "3%",
-          top: "5%",
+          top: "10%",
           containLabel: true,
         },
         xAxis: {

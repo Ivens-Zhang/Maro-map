@@ -4,7 +4,6 @@
         <el-select
           v-model="portName"
           :placeholder="this.$t('port.placeholder')"
-          style="margin: 10px"
           size="mini"
           @change="changePortName"
         >
@@ -45,7 +44,7 @@ export default {
       this.option.series[0].data = fulfillmentArr;
       this.option.series[1].data = shortageArr;
 
-      this.option.title.subtext = `${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].singlePortFulfillmentTickCount} \n${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].singlePortShortageTickCount}`
+      this.option.title.subtext = `${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].singlePortFulfillmentTickCount}  ${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].singlePortShortageTickCount}`
       // console.log(fulfillmentArr, shortageArr, 'fffffffff');
       this.portChart.setOption(this.option);
     },
@@ -61,9 +60,9 @@ export default {
       count: 1,
       option: {
         title: {
-          subtext: `${this.$t('port.todayFulfillment')}:  \n${this.$t('port.todayShortage')}: `,
-          right: '12%',
-          bottom: '8%',
+          subtext: `${this.$t('port.todayFulfillment')}:  ${this.$t('port.todayShortage')}: `,
+          left: '18%',
+          bottom: '12%',
           subtextStyle: {
             color: 'white',
             fontSize: '15',
@@ -86,7 +85,7 @@ export default {
         legend: {
           data: this.legend,
           x: "center", // 'center' | 'left' | {number},
-          y: "bottom", // 'center' | 'bottom' | {number
+          top: "auto",
           textStyle: {
             color: 'white'
           }
