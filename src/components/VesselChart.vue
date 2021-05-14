@@ -27,6 +27,7 @@ export default {
     chartData: Array,
     legend: Array,
     allVesselName: Array,
+    resDate: String
     // id: String,
   },
   watch: {
@@ -49,7 +50,8 @@ export default {
       this.option.series[1].data = empty;
       this.option.series[2].data = remaining_space;
       // this.option.title.subtext = `${this.$t('port.fulfillment')}:  \n${this.$t('port.shortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
-      this.option.title.subtext = `${this.$t('vessel.todayLaden')}: ${oldValue[oldValue.length - 1].full}            ${this.$t('vessel.todayEmpty')}: ${oldValue[oldValue.length - 1].empty} \n${this.$t('vessel.todayRemainingSpace')}: ${oldValue[oldValue.length - 1].remaining_space} `,
+      this.option.title.subtext = `${this.resDate}   \n${this.$t('vessel.todayLaden')}: ${oldValue[oldValue.length - 1].full}            ${this.$t('vessel.todayEmpty')}: ${oldValue[oldValue.length - 1].empty} \n${this.$t('vessel.todayRemainingSpace')}: ${oldValue[oldValue.length - 1].remaining_space} `,
+      // this.option.title.subtext = `${resDate}        ${this.$t('vessel.todayRemainingSpace')}: ${oldValue[oldValue.length - 1].remaining_space} \n ${this.$t('vessel.todayLaden')}: ${oldValue[oldValue.length - 1].full}            ${this.$t('vessel.todayEmpty')}: ${oldValue[oldValue.length - 1].empty}`,
       this.vesselChart.setOption(this.option);
     },
     legend: function (oldValue, newValue) {
@@ -65,8 +67,9 @@ export default {
       option: {
         title: {
           subtext: `${this.$t('vessel.todayLaden')}:             ${this.$t('vessel.todayEmpty')}:  \n${this.$t('vessel.todayRemainingSpace')}:  `,
-          left: '18%',
-          bottom: '8%',
+          // subtext: `${resDate}      ${this.$t('vessel.todayRemainingSpace')}:  \n  ${this.$t('vessel.todayLaden')}:             ${this.$t('vessel.todayEmpty')}:  `,
+          left: '13%',
+          bottom: '1%',
           subtextStyle: {
             color: 'white',
             fontSize: '15',

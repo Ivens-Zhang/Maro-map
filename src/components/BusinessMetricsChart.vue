@@ -10,7 +10,8 @@ export default {
   props: {
     chartData: Array,
     legend: Array,
-    id: String
+    id: String,
+    resDate: String
   },
   watch: {
     chartData: function (oldValue, newValue) {
@@ -23,7 +24,7 @@ export default {
       this.option.series[0].data = fulfillmentArr;
       this.option.series[1].data = shortageArr;
 
-      this.option.title.subtext = `${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].fulfillmentTickCount}       ${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
+      this.option.title.subtext = `${this.resDate} \n${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].fulfillmentTickCount}       ${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].shortageTickCount}`
       this.bussinessMetricsChart.setOption(this.option);
     },
     legend: function (oldValue, newValue) {
@@ -37,14 +38,14 @@ export default {
       bussinessMetricsChart: null,
       option: {
         title: {
-          subtext: `${this.$t('port.todayFulfillment')}:        ${this.$t('port.todayShortage')}: `,
-          left: '18%',
-          bottom: '12%',
+          subtext: `2014/12/24 \n${this.$t('port.todayFulfillment')}:        ${this.$t('port.todayShortage')}: `,
+          left: '13%',
+          bottom: '7%',
           subtextStyle: {
             color: 'white',
             fontSize: '15',
             verticalAlign: 'top',
-            lineHeight: 20,
+            lineHeight: 25,
           }
         },
         tooltip: {
@@ -89,7 +90,7 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [120, 132, 101, 134, 90, 230, 210],
+            data: []
           },
           {
             name: this.legend[1],
@@ -99,7 +100,7 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [220, 182, 191, 234, 290, 330, 310],
+            data: []
           },
         ],
       },

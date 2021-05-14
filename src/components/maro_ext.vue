@@ -82,13 +82,13 @@
       >
         <el-tabs type="card"  @tab-click="handleTabClick">
           <el-tab-pane :label="this.$t('normal.businessMetrics')" >
-            <business_metrics_chart :id="businessMetricsChartID" :chartData="resBussinessMetrics" :legend="bussinessMetricsLegend"></business_metrics_chart>
+            <business_metrics_chart :id="businessMetricsChartID" :resDate="resDate" :chartData="resBussinessMetrics" :legend="bussinessMetricsLegend"></business_metrics_chart>
           </el-tab-pane>
           <el-tab-pane :label="this.$t('normal.port')" name="portChartPane">
-            <port_chart ref="portChartRef" @changePortName="changePortName" :allPortsNames="allPortsNames" :chartData="resSinglePortData" :legend="bussinessMetricsLegend"></port_chart>
+            <port_chart ref="portChartRef" @changePortName="changePortName" :allPortsNames="allPortsNames" :resDate="resDate" :chartData="resSinglePortData" :legend="bussinessMetricsLegend"></port_chart>
           </el-tab-pane>
           <el-tab-pane :label="this.$t('normal.vessel')" name="vesselChartPane">
-            <vessel_chart ref="vesselChartRef" @changeVesselName="changeVesselName" :allVesselName="allVesselName" :chartData="resSingleVesselData" :legend="vesselChartLegend"></vessel_chart>
+            <vessel_chart ref="vesselChartRef" @changeVesselName="changeVesselName" :allVesselName="allVesselName" :resDate="resDate" :chartData="resSingleVesselData" :legend="vesselChartLegend"></vessel_chart>
           </el-tab-pane>
           <!-- <el-tab-pane :label="this.$t('normal.port')">
             <stack_chart_2
@@ -133,6 +133,8 @@ import vessel_chart from './VesselChart.vue'
 import rank_list from './RankList.vue'
 import port_heat_map from './PortHeatMap.vue';
 
+import data_slider from '../../static/data/data_slider.json';
+
 class tick_to_time {
   constructor(start_time, end_time) {
     this.start_time = start_time;
@@ -165,6 +167,7 @@ export default {
   },
   data: function () {
     return {
+      resDate: '',
       timer: null,
       businessMetricsChartID: 'businessMetricsChartID',
       portChartFlag: false,
@@ -434,13 +437,16 @@ export default {
       let res = []
       // FIXME 这里没有考虑挪动时间轴导致总时长不足 50 的情况
       if (tick < timeRange) {  // tick 在前半段
-        res = receivePortData.slice(0, tick + timeRange)
+        res = receivePortData.slice(0, tick)
       } else if (receivePortData.length - tick < timeRange) {  // tick 在后半段
         res = receivePortData.slice(tick - timeRange, receivePortData.length - 1)
       } else {
-        res = receivePortData.slice(tick - timeRange, tick + timeRange)
+        res = receivePortData.slice(tick - timeRange, tick)
       }
       this.resBussinessMetrics = res
+      let tickDate = new Date('2014-12-24').getTime();
+      tickDate = tickDate + tick * 1000 * 60 * 60 * 24
+      this.resDate = new Date(tickDate).toLocaleDateString()
     },
     // ----------------------------------- 船舶图表 ----------------------------------------------------
     async update_range_data(data_start, data_end, data_play_percent, epoch) {

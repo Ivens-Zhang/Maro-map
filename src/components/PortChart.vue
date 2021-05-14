@@ -27,7 +27,8 @@ export default {
   props: {
     chartData: Array,
     legend: Array,
-    allPortsNames: Array
+    allPortsNames: Array,
+    resDate: String
     // id: String,
   },
   watch: {
@@ -44,7 +45,7 @@ export default {
       this.option.series[0].data = fulfillmentArr;
       this.option.series[1].data = shortageArr;
 
-      this.option.title.subtext = `${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].singlePortFulfillmentTickCount}       ${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].singlePortShortageTickCount}`
+      this.option.title.subtext = `${this.resDate} \n${this.$t('port.todayFulfillment')}: ${oldValue[oldValue.length - 1].singlePortFulfillmentTickCount}       ${this.$t('port.todayShortage')}: ${oldValue[oldValue.length - 1].singlePortShortageTickCount}`
       // console.log(fulfillmentArr, shortageArr, 'fffffffff');
       this.portChart.setOption(this.option);
     },
@@ -60,14 +61,14 @@ export default {
       count: 1,
       option: {
         title: {
-          subtext: `${this.$t('port.todayFulfillment')}:        ${this.$t('port.todayShortage')}: `,
-          left: '18%',
-          bottom: '12%',
+          subtext: ` \n${this.$t('port.todayFulfillment')}:           ${this.$t('port.todayShortage')}: `,
+          left: '13%',
+          bottom: '7%',
           subtextStyle: {
             color: 'white',
             fontSize: '15',
             verticalAlign: 'top',
-            lineHeight: 20,
+            lineHeight: 25,
           }
         },
         tooltip: {
@@ -112,7 +113,7 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [1120, 2132, 1201, 1344, 910, 2330, 2110],
+            data: [],
           },
           {
             name: this.legend[1],
@@ -122,7 +123,7 @@ export default {
             emphasis: {
               focus: "series",
             },
-            data: [220, 182, 191, 234, 290, 330, 310],
+            data: [],
           },
         ],
       },
